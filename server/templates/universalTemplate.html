@@ -10,9 +10,12 @@
 <body>
     <div class="overlay">
         <div id="utContent" class="utContent"> 
-            
+            {% include includePage %}
         </div>    
     </div>
+    <script>
+        var csrfToken = "{{csrf_token}}"
+    </script>
     <script src="{% static 'js/general.js' %}"></script>
 </body>
 </html>

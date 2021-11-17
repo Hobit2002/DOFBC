@@ -1,0 +1,16 @@
+﻿{% load static %}
+
+<input id="loginnameRegistration" class="input100 jtl" placeholder="{{loginnameHTML}}">
+
+<input id="passwordRegistration" class="input100jtl" type="password" placeholder="{{passwordHTML}}">
+<input id="passwordRegistration" class="input100jtl" type="password" placeholder="{{passwordConfirmationHTML}}">
+        
+            <button id="LoginButton" onclick="userRequest('register',{'email':loginnameLogin.value,'password':passwordLogin.value},'POST')">
+                {{registrationHTML}}
+            </button>
+
+            <div onclick="userRequest('login')">
+                {{loginHTML}}
+            </div>
+
+
