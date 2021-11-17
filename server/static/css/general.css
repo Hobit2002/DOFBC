@@ -1,0 +1,29 @@
+
+
+.overlay{
+    position: fixed;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0mm;
+    padding: 0mm;
+    top:0px;
+    left:0px;
+    background-color: rgb(217, 230, 172);
+}
+
+.utContent{
+    width: 85vw;
+    max-width: 85vw;
+    height: 40em;
+    max-height: 40em;
+    background-color: rgb(227, 229, 194);
+    margin-top: 5em;
+    position: fixed;
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
+    border-radius: 150px;
+    border: 4em solid rgb(6, 41, 10);
+    }
+
