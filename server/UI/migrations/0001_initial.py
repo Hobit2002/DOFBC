@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
             name='appUser',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
-                ('loginname', models.TextField(max_length=60, unique=True)),
+                ('username', models.TextField(max_length=60, unique=True)),
                 ('name', models.TextField(max_length=60)),
                 ('hash', models.TextField(max_length=80)),
                 ('areas', models.ManyToManyField(to='UI.Area')),

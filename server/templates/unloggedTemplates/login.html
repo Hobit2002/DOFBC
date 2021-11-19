@@ -1,11 +1,11 @@
 ﻿{% load static %}
 
-<input id="loginnameLogin" class="input100 jtl" placeholder="{{loginnameHTML}}">
+<input id="usernameLogin" class="input100 jtl" placeholder="{{usernameHTML}}">
 
 <input id="passwordLogin" class="input100jtl" type="password" placeholder="{{passwordHTML}}">
         
         
-<button id="LoginButton" onclick="userRequest('login',{'email':loginnameLogin.value,'password':passwordLogin.value},'POST')">
+<button id="LoginButton" onclick="userRequest('authenticate',{'username':usernameLogin.value,'password':passwordLogin.value},'POST')">
     {{loginHTML}}
 </button>
 

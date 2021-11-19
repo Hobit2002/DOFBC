@@ -4,6 +4,6 @@
     "emailHTML":"Email",
     "passwordHTML":"Heslo",
     "passwordConfirmationHTML":"Potvrzení hesla",
-    "loginnameHTML":"Uživatelské jméno"
+    "usernameHTML":"Uživatelské jméno"
 
 }

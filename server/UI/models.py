@@ -15,8 +15,8 @@ class Area(models.Model):
 
 class appUser(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    loginname = models.TextField(max_length=60,unique=True)
-    name = models.TextField(max_length=60)
+    username = models.TextField(max_length=60,unique=True)
+    name = models.TextField(max_length=60,default='')
     hash = models.TextField(max_length=80)
     areas = models.ManyToManyField(Area)
 
@@ -24,7 +24,7 @@ class appUser(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return super().__str__() + ":U:" + self.loginname
+        return super().__str__() + ":U:" + self.username
 
 statusChoices = (('W','Waiting'),('A','Activated'),('C','Closed'))
 
