@@ -6,5 +6,7 @@ urlpatterns = [
     path('login',uiViews.login),
     path('register',uiViews.register),
     path('authenticate',uiViews.authenticate),
-    path('home',uiViews.home)
+    path('home',uiViews.home),
+    path('newFeedback',uiViews.newFeedback),
+    path('feedback',uiViews.feedback)
 ]

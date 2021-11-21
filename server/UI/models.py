@@ -1,46 +1,25 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
+from django.conf import settings
 import uuid
 
-from django.db.models.deletion import CASCADE
-
-class Area(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    name = models.TextField(max_length=100)
-
-    def __str__(self):
-        return super().__str__() + ":Area:" + self.name
-
-class appUser(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    username = models.TextField(max_length=60,unique=True)
-    name = models.TextField(max_length=60,default='')
-    hash = models.TextField(max_length=80)
-    areas = models.ManyToManyField(Area)
-
-    class Meta:
-        ordering = ["name"]
-
-    def __str__(self):
-        return super().__str__() + ":U:" + self.username
-
 statusChoices = (('W','Waiting'),('A','Activated'),('C','Closed'))
-
-class Feedback(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    name = models.TextField(max_length=100)
-    area = models.ForeignKey('Area', on_delete=models.CASCADE, null=True)
-    status = models.CharField(max_length=1,choices=statusChoices,default='W')
-
-    def __str__(self):
-        return super().__str__() + ":FB:" + self.name
 
 class Form(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.TextField(max_length=100)
-    jsonQuestions = models.TextField(max_length=1000)
+    jsonQuestions = models.TextField(max_length=1000,default="{}")
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,models.CASCADE,null=True,default=None)
 
     def __str__(self):
         return super().__str__() + ":Form:" + self.name
+
+class Feedback(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    name = models.TextField(max_length=100)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,models.CASCADE,null=True,default=None)
+    status = models.CharField(max_length=1,choices=statusChoices,default='W')
+    form = models.OneToOneField(Form,models.DO_NOTHING,null=True,default=None)
+    jsonAnswers = models.TextField(max_length=1000,default="{}")
+
+    def __str__(self):
+        return super().__str__() + ":FB:" + self.name

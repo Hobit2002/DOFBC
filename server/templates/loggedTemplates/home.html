@@ -1,1 +1,6 @@
 bebebe
+
+{% for fb in feedbacks %}
+Fb:{{fb.name}}
+{% endfor %}
+<button onclick="userRequest('newFeedback')">New feedback</button>
