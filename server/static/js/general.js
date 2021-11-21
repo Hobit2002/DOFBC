@@ -11,11 +11,7 @@ function userRequest(url,paramObject={},method="GET"){
 
     request.onreadystatechange = function() {
         if(request.readyState == 4 && request.status == 200) {  
-            //rewrite displayed url
-            if(method=="POST"){
-                urlEncodedDataPairsStr+="&ajaxForm=1"
-            }
-            window.history.pushState({},"",request.responseURL) 
+            window.history.pushState({},"",request.responseURL.replace("&ajaxForm=1","")) 
             //redraw content block
             utContent.innerHTML = request.responseText
         }
@@ -32,7 +28,7 @@ function userRequest(url,paramObject={},method="GET"){
         request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
         request.setRequestHeader("X-CSRFToken", csrfToken)
     }
-    request.send(urlEncodedDataPairsStr.slice(0,-1))
+    request.send(urlEncodedDataPairsStr.slice(0,-1)+"&ajaxForm=1")
 
 
     

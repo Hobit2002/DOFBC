@@ -1,16 +1,17 @@
-﻿{% load static %}
+﻿{% extends "unloggedTemplates/unloggedTemplate.html" %}
+{% block content %}
+    <input id="usernameLogin" class="input100 jtl" placeholder="{{usernameHTML}}">
 
-<input id="usernameLogin" class="input100 jtl" placeholder="{{usernameHTML}}">
+    <input id="passwordLogin" class="input100jtl" type="password" placeholder="{{passwordHTML}}">
+            
+            
+    <button id="LoginButton" onclick="userRequest('authenticate',{'username':usernameLogin.value,'password':passwordLogin.value},'POST')">
+        {{loginHTML}}
+    </button>
 
-<input id="passwordLogin" class="input100jtl" type="password" placeholder="{{passwordHTML}}">
-        
-        
-<button id="LoginButton" onclick="userRequest('authenticate',{'username':usernameLogin.value,'password':passwordLogin.value},'POST')">
-    {{loginHTML}}
-</button>
-
-<div onclick="userRequest('registration')">
-    {{registrationHTML}}
-</div>
+    <div onclick="userRequest('registration')">
+        {{registrationHTML}}
+    </div>
+{% endblock %}
 
 
