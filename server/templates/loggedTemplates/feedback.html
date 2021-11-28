@@ -7,11 +7,18 @@
             <i>{{NoNameYetHTML}}</i>
         {% endif %}
     </div>
-    <div id="questionsFeedback">
-        {% for question in Questions %}
-            <div class="{{question.type}}Question">
-                {{question.content}}
-            </div>
-        {% endfor %}
-    </div>
 </h2>
+<div id="questionsFeedback">
+    <h2>{{verbalQuestionsHTML}}</h2>
+    {% for question in Questions.Verbal %}
+        <div class="verbalQuestion">
+            {{question}}
+        </div>
+    {% endfor %}
+    <h2>{{ratingQuestionsHTML}}</h2>
+    {% for question in Questions.Rating %}
+        <div class="rankingQuestion">
+            {{question}}
+        </div>
+    {% endfor %}
+</div>

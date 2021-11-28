@@ -10,10 +10,10 @@ function userRequest(url,paramObject={},method="GET",visible=true){
     }
 
     request.onreadystatechange = function() {
-        if(request.readyState == 4 && request.status == 200 && visible) {  
-            window.history.pushState({},"",request.responseURL.replace("&ajaxForm=1","")) 
+        if(request.readyState == 4 && request.status == 200 && visible) {
             //redraw content block
-            utContent.innerHTML = request.responseText
+            utContent.innerHTML = request.responseText  
+            window.history.pushState({},"",request.responseURL.replace("&ajaxForm=1","")) 
         }
     }
     //send XMLHttpRequest

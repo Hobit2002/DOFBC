@@ -57,7 +57,12 @@ def home(request):
 
 #newFeedback:create a new fb and redirect to its page
 def newFeedback(request):
-    fb = Feedback(user_id=request.user.id)
+    #create default form
+    basicFormString = json.dumps({"Verbal":[],"Rating":[]})
+    form = Form(user_id=request.user.id,jsonQuestions = basicFormString)
+    form.save()
+    #create default feedback
+    fb = Feedback(user_id=request.user.id,form=form)
     fb.save()
     url="{}?{}".format('/ui/feedback',urlencode({"ID":fb.id}))
     return redirect(url)
@@ -79,7 +84,10 @@ def feedback(request):
     if not fb:return errorPage("NoSuchFBERR",request)
     languageDict = loadLanguageDict()
     languageDict["Feedback"] = fb
-    languageDict["Questions"] = json.loads(fb.jsonAnswers)
+    languageDict["Answers"] = json.loads(fb.jsonAnswers)
+    #Form data 
+    frm = Form.objects.filter(id=fb.form.id)[0]
+    languageDict["Questions"] = json.loads(frm.jsonQuestions)
     return answer(request,"loggedTemplates/feedback.html",languageDict)
 
 #feedbackUpdate
