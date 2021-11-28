@@ -4,6 +4,9 @@
     "emailHTML":"Email",
     "passwordHTML":"Heslo",
     "passwordConfirmationHTML":"Potvrzení hesla",
-    "usernameHTML":"Uživatelské jméno"
+    "usernameHTML":"Uživatelské jméno",
+    "NoSuchFBERR":"K hledané zpětné vazbě nemáte přístup",
+    "NoNameYetHTML":"Dosud bez jména",
+    "NewFBHTML":"Přidat zpětnou vazbu"
 
 }

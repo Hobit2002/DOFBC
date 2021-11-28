@@ -1,2 +1,17 @@
-bleble
-{{Feedback.name}}
+<input type="hidden" id="feedbackObjId" value="{{Feedback.id}}">
+<h2>
+    <div id="nameFeedback" onclick="edittextContent(this,'feedback')">
+        {% if Feedback.name %}
+            {{Feedback.name}}
+        {% else %}
+            <i>{{NoNameYetHTML}}</i>
+        {% endif %}
+    </div>
+    <div id="questionsFeedback">
+        {% for question in Questions %}
+            <div class="{{question.type}}Question">
+                {{question.content}}
+            </div>
+        {% endfor %}
+    </div>
+</h2>

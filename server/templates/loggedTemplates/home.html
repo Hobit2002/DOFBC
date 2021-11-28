@@ -1,6 +1,8 @@
 bebebe
 
 {% for fb in feedbacks %}
-Fb:{{fb.name}}
+    <div class="feedbackButton" onclick="userRequest('newFeedback',{'ID':'{{fb.id}}'})">
+        Fb:{{fb.name}}
+    </div>
 {% endfor %}
-<button onclick="userRequest('newFeedback')">New feedback</button>
+<button onclick="userRequest('newFeedback')">{{NewFBHTML}}</button>

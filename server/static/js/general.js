@@ -1,4 +1,4 @@
-function userRequest(url,paramObject={},method="GET"){
+function userRequest(url,paramObject={},method="GET",visible=true){
     //send request
     var request = new XMLHttpRequest()
     //write url
@@ -10,7 +10,7 @@ function userRequest(url,paramObject={},method="GET"){
     }
 
     request.onreadystatechange = function() {
-        if(request.readyState == 4 && request.status == 200) {  
+        if(request.readyState == 4 && request.status == 200 && visible) {  
             window.history.pushState({},"",request.responseURL.replace("&ajaxForm=1","")) 
             //redraw content block
             utContent.innerHTML = request.responseText
@@ -29,7 +29,17 @@ function userRequest(url,paramObject={},method="GET"){
         request.setRequestHeader("X-CSRFToken", csrfToken)
     }
     request.send(urlEncodedDataPairsStr.slice(0,-1)+"&ajaxForm=1")
+}
 
+//when the function is called 
+function edittextContent(object,site){
+    object.contentEditable = true
+    object.addEventListener("focusout",function (event){
+        address = site +"Update"
+        parameter = object.id.slice(0,-1*(site.length))
+        objId = document.getElementById(site+"ObjId").value
+        userRequest(address,{"ID":objId,"parameter":parameter,"value":object.innerText},method="GET",visible=false)
+    })
+    object.focus()
 
-    
 }
