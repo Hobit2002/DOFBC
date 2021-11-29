@@ -31,15 +31,37 @@ function userRequest(url,paramObject={},method="GET",visible=true){
     request.send(urlEncodedDataPairsStr.slice(0,-1)+"&ajaxForm=1")
 }
 
-//when the function is called 
+function commitChanges(site,object){
+    address = site +"Update"
+    console.log('Obj:',object)
+    parameter = object.id.slice(0,-1*(site.length))
+    objId = document.getElementById(site+"ObjId").value
+    userRequest(address,{"ID":objId,"parameter":parameter,"value":object.innerText},method="GET",visible=false)
+}
+
 function edittextContent(object,site){
     object.contentEditable = true
     object.addEventListener("focusout",function (event){
-        address = site +"Update"
-        parameter = object.id.slice(0,-1*(site.length))
-        objId = document.getElementById(site+"ObjId").value
-        userRequest(address,{"ID":objId,"parameter":parameter,"value":object.innerText},method="GET",visible=false)
+        commitChanges(site,object)
+        object.contentEditable = false
     })
     object.focus()
-
 }
+
+function insertElement(what,where,replaceObj){
+    newElemHTML = document.getElementById(what+"Template").innerHTML
+    for(const [replaceIt,replaceBy] of Object.entries(replaceObj)){
+        newElemHTML = newElemHTML.replaceAll(replaceIt,replaceBy)
+    }
+    document.getElementById(where).innerHTML+=newElemHTML
+}
+
+function addQuestion(type){
+    var listElem = document.getElementById(type+"QueLiFeedback")
+    var inpElem = document.getElementById("new"+type+"QueTextFeedback")
+    var childCount = listElem.children.length;
+    insertElement('questionFeedback',type+'QueLiFeedback',{'Quetype':type,'Loocounter':childCount+1,'Quecontent':inpElem.value});
+    commitChanges('feedback',listElem.children[childCount]);
+    inpElem.value=''
+}
+

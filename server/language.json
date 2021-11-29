@@ -9,6 +9,8 @@
     "NoNameYetHTML":"Dosud bez jména",
     "NewFBHTML":"Přidat zpětnou vazbu",
     "ratingQuestionsHTML":"Bodovací otázky",
-    "verbalQuestionsHTML":"Otázky s otevřenou odpovědí"
+    "verbalQuestionsHTML":"Otázky s otevřenou odpovědí",
+    "newQuestionPlaceholderHTML":"Znění nové otázky",
+    "AddHTML":"Přidat"
 
 }

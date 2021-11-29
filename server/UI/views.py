@@ -41,8 +41,9 @@ def authenticate(request):
     user = djAuthenticate(password=password,username=username)
     if user != None:
         djLogin(request,user)
+        return redirect("/ui/home")
     #redirect
-    return redirect("/ui/home")
+    
 
 #login:logs user in
 def login(request):
@@ -98,6 +99,16 @@ def feedbackUpdate(request):
     value = request.GET["value"]
     if parameter == "name":
         fb.name = value
+    elif parameter[0:8]=="question":
+        questions = json.loads(fb.form.jsonQuestions)
+        queType = parameter[8:14]
+        index = int(parameter[14:]) - 1
+        try:
+            questions[queType][index] = value
+        except IndexError:
+            questions[queType].append(value)
+        fb.form.jsonQuestions = json.dumps(questions)
+        fb.form.save()
     fb.save()
     return HttpResponse('OK')
 

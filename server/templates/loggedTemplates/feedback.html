@@ -10,15 +10,33 @@
 </h2>
 <div id="questionsFeedback">
     <h2>{{verbalQuestionsHTML}}</h2>
-    {% for question in Questions.Verbal %}
-        <div class="verbalQuestion">
-            {{question}}
-        </div>
-    {% endfor %}
+    <div id="VerbalQueLiFeedback">
+        {% for question in Questions.Verbal %}
+            <!-- if you change these questions remember to update hidden questionFeedbackTemplate too -->
+            <div id="questionVerbal{{forloop.counter}}Feedback" class="VerbalQuestion" onclick="edittextContent(this,'feedback')">
+                {{question}}
+            </div>
+        {% endfor %}
+    </div>
+    <div>
+        <input id="newVerbalQueTextFeedback" placeholder="{{newQuestionPlaceholderHTML}}">
+        <button id="newVerbalQueButtonFeedback" onclick="addQuestion('Verbal')">
+            {{AddHTML}}
+        </button>
+    </div>
+
     <h2>{{ratingQuestionsHTML}}</h2>
-    {% for question in Questions.Rating %}
-        <div class="rankingQuestion">
-            {{question}}
-        </div>
-    {% endfor %}
+    <div id="RatingQueLiFeedback">
+        {% for question in Questions.Rating %}
+            <div id="questionRating{{forloop.counter}}Feedback" class="rankingQuestion" onclick="edittextContent(this,'feedback')">
+                {{question}}
+            </div>
+        {% endfor %}
+    </div>
+    <div>
+        <input id="newRatingQueTextFeedback" placeholder="{{newQuestionPlaceholderHTML}}">
+        <button id="newRatingQueButtonFeedback" onclick="addQuestion('Rating')">
+            {{AddHTML}}
+        </button>
+    </div>
 </div>
