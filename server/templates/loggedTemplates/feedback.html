@@ -12,9 +12,14 @@
     <h2>{{verbalQuestionsHTML}}</h2>
     <div id="VerbalQueLiFeedback">
         {% for question in Questions.Verbal %}
-            <!-- if you change these questions remember to update hidden questionFeedbackTemplate too -->
-            <div id="questionVerbal{{forloop.counter}}Feedback" class="VerbalQuestion" onclick="edittextContent(this,'feedback')">
-                {{question}}
+            <div>
+                <!-- if you change these questions remember to update hidden questionFeedbackTemplate too -->
+                <div id="questionVerbal{{forloop.counter}}Feedback" class="VerbalQuestion" onclick="edittextContent(this,'feedback')">
+                    {{question}}
+                </div>
+                <button onclick="deleteQuestion(this.parentElement,'Verbal')">
+                    {{DeleteHTML}}
+                </button>
             </div>
         {% endfor %}
     </div>
@@ -28,8 +33,13 @@
     <h2>{{ratingQuestionsHTML}}</h2>
     <div id="RatingQueLiFeedback">
         {% for question in Questions.Rating %}
-            <div id="questionRating{{forloop.counter}}Feedback" class="rankingQuestion" onclick="edittextContent(this,'feedback')">
-                {{question}}
+            <div>
+                <div id="questionRating{{forloop.counter}}Feedback" class="RatingQuestion" onclick="edittextContent(this,'feedback')">
+                    {{question}}
+                </div>
+                <button onclick="deleteQuestion(this.parentElement,'Rating')">
+                        {{DeleteHTML}}
+                </button>
             </div>
         {% endfor %}
     </div>

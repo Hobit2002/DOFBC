@@ -33,7 +33,6 @@ function userRequest(url,paramObject={},method="GET",visible=true){
 
 function commitChanges(site,object){
     address = site +"Update"
-    console.log('Obj:',object)
     parameter = object.id.slice(0,-1*(site.length))
     objId = document.getElementById(site+"ObjId").value
     userRequest(address,{"ID":objId,"parameter":parameter,"value":object.innerText},method="GET",visible=false)
@@ -61,7 +60,23 @@ function addQuestion(type){
     var inpElem = document.getElementById("new"+type+"QueTextFeedback")
     var childCount = listElem.children.length;
     insertElement('questionFeedback',type+'QueLiFeedback',{'Quetype':type,'Loocounter':childCount+1,'Quecontent':inpElem.value});
-    commitChanges('feedback',listElem.children[childCount]);
+    commitChanges('feedback',listElem.children[childCount].children[0]);
     inpElem.value=''
 }
 
+function deleteQuestion(parElem,type){
+    //send message
+    var question = parElem.children[0]
+    question.innerHTML=""
+    commitChanges('feedback',question)
+    //delete elem
+    parElem.remove()
+    //renumerate other questions
+    elements = Array.from(document.getElementsByClassName(type+"Question"))
+    loopCounter = 1
+    for(que of elements){
+        que.id= "question"+type+String(loopCounter)+"Feedback"
+        loopCounter+=1
+    }
+
+}

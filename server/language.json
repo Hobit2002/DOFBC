@@ -11,6 +11,7 @@
     "ratingQuestionsHTML":"Bodovací otázky",
     "verbalQuestionsHTML":"Otázky s otevřenou odpovědí",
     "newQuestionPlaceholderHTML":"Znění nové otázky",
-    "AddHTML":"Přidat"
+    "AddHTML":"Přidat",
+    "DeleteHTML":"x"
 
 }

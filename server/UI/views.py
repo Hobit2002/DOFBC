@@ -103,10 +103,13 @@ def feedbackUpdate(request):
         questions = json.loads(fb.form.jsonQuestions)
         queType = parameter[8:14]
         index = int(parameter[14:]) - 1
-        try:
-            questions[queType][index] = value
-        except IndexError:
-            questions[queType].append(value)
+        if len(value):
+            try:
+                questions[queType][index] = value
+            except IndexError:
+                questions[queType].append(value)
+        else:
+            del questions[queType][index]
         fb.form.jsonQuestions = json.dumps(questions)
         fb.form.save()
     fb.save()
