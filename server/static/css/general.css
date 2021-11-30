@@ -33,3 +33,81 @@
     background-color: rgb(106, 168, 95);
     width:10vw;
 }
+
+/* classes for row lists */
+.rowList{
+    background-color: rgb(140 185 115);
+    width: 30vw;
+    margin-left: 30vw;
+    margin-top: 5vh;
+    max-height: 90vh;
+    overflow-y:auto;
+}
+
+.fbRow{
+    min-height: 4vh;
+    width: 16vw;
+    margin-top: 0.7vh;
+    margin-left: 7vw;
+    padding: 2px;
+    text-align: center;
+    font-size: medium;
+    font-weight: bold;
+    background-color: rgb(21, 145, 77);
+}
+
+.endlistButton{
+    margin-left: 10vw;
+    margin-top: 1vh;
+    margin-bottom: 1vh;   
+}
+/* classes for block lists */
+.blockList{
+    margin-top: 8vh;
+    margin-left: 10vw;
+    max-height: 95vh;
+    overflow-y: auto;
+}
+
+.fbBlock{
+    min-height: 18vh;
+    width: 9vw;
+    margin:1em;
+    padding: 5px;
+    background-color: rgb(21, 145, 77);
+    text-align: center;
+    font-size: medium;
+    font-weight: bold;
+}
+
+.blockRow{
+    display: flex;
+}
+
+/* buttons */
+.newButton,.deleteButton{
+   border-radius: 60%;
+   padding:8px; 
+}
+
+.newButton{
+    background-color: rgb(7, 148, 117);
+}
+
+.deleteButton{
+    background-color: rgb(143, 96, 26);
+}
+
+.bigCircle{
+    height: 9em;
+    width: 9em;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+/* fixed positions */
+.rightDownCorner{
+    position: fixed;
+    top:80vh;
+    left:90vw;
+}

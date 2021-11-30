@@ -1,8 +1,14 @@
-bebebe
-
-{% for fb in feedbacks %}
-    <div class="feedbackButton" onclick="userRequest('newFeedback',{'ID':'{{fb.id}}'})">
-        Fb:{{fb.name}}
-    </div>
-{% endfor %}
-<button onclick="userRequest('newFeedback')">{{NewFBHTML}}</button>
+<div class="blockList">
+    {% for fb in feedbacks %}
+        {% if forloop.counter in rowStarts %}
+            <div class="blockRow">
+        {% endif %}
+        <div class="fbBlock" onclick="userRequest('newFeedback',{'ID':'{{fb.id}}'})">
+            {{fb.name}}
+        </div>
+        {% if forloop.counter in rowEnds %}
+            </div>
+        {% endif %}
+    {% endfor %}
+    <button class="newButton bigCircle rightDownCorner" onclick="userRequest('newFeedback')">{{NewFBHTML}}</button>
+</div>

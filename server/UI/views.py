@@ -54,6 +54,17 @@ def login(request):
 def home(request):
     languageDict = loadLanguageDict()
     languageDict["feedbacks"] = Feedback.objects.filter(user_id = request.user.id)
+    #prepare row breakpoints
+    feedbackCount =len(languageDict["feedbacks"])
+    rowLen = 7
+    rowCount =  feedbackCount//rowLen
+    languageDict["rowStarts"] = []
+    languageDict["rowEnds"] = [feedbackCount]
+    for rc in range(rowCount+1):
+        languageDict["rowStarts"].append(rc*rowLen+1)
+        languageDict["rowEnds"].append(rc*rowLen+(rowLen-1)+1)
+    print(languageDict["rowStarts"])
+    #render page
     return answer(request,"loggedTemplates/home.html",languageDict)
 
 #newFeedback:create a new fb and redirect to its page
