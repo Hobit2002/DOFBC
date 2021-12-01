@@ -1,6 +1,6 @@
 <input type="hidden" id="feedbackObjId" value="{{Feedback.id}}">
 <h2>
-    <div id="nameFeedback" onclick="edittextContent(this,'feedback')">
+    <div id="nameFeedback" class="centerTitle" onclick="edittextContent(this,'feedback')">
         {% if Feedback.name %}
             {{Feedback.name}}
         {% else %}
@@ -8,45 +8,49 @@
         {% endif %}
     </div>
 </h2>
-<div id="questionsFeedback">
-    <h2>{{verbalQuestionsHTML}}</h2>
-    <div id="VerbalQueLiFeedback">
-        {% for question in Questions.Verbal %}
-            <div>
-                <!-- if you change these questions remember to update hidden questionFeedbackTemplate too -->
-                <div id="questionVerbal{{forloop.counter}}Feedback" class="VerbalQuestion" onclick="edittextContent(this,'feedback')">
-                    {{question}}
+<div id="questionsFeedback" class="twoFacedBlock">
+    <div class="rowList">
+        <h2>{{verbalQuestionsHTML}}</h2>
+        <div id="VerbalQueLiFeedback">
+            {% for question in Questions.Verbal %}
+                <div class="fbRow">
+                    <!-- if you change these questions remember to update hidden questionFeedbackTemplate too -->
+                    <div id="questionVerbal{{forloop.counter}}Feedback" class="VerbalQuestion" onclick="edittextContent(this,'feedback')">
+                        {{question}}
+                    </div>
+                    <button onclick="deleteQuestion(this.parentElement,'Verbal')" class="deleteButton">
+                        {{DeleteHTML}}
+                    </button>
                 </div>
-                <button onclick="deleteQuestion(this.parentElement,'Verbal')">
-                    {{DeleteHTML}}
-                </button>
-            </div>
-        {% endfor %}
-    </div>
-    <div>
-        <input id="newVerbalQueTextFeedback" placeholder="{{newQuestionPlaceholderHTML}}">
-        <button id="newVerbalQueButtonFeedback" onclick="addQuestion('Verbal')">
-            {{AddHTML}}
-        </button>
+            {% endfor %}
+        </div>
+        <div class="rowListBottom">
+            <input id="newVerbalQueTextFeedback" placeholder="{{newQuestionPlaceholderHTML}}" class="endlistInput">
+            <button id="newVerbalQueButtonFeedback" class="newButton endlistButton" onclick="addQuestion('Verbal')">
+                {{AddHTML}}
+            </button>
+        </div>
     </div>
 
-    <h2>{{ratingQuestionsHTML}}</h2>
-    <div id="RatingQueLiFeedback">
-        {% for question in Questions.Rating %}
-            <div>
-                <div id="questionRating{{forloop.counter}}Feedback" class="RatingQuestion" onclick="edittextContent(this,'feedback')">
-                    {{question}}
+    <div class="rowList">
+        <h2>{{ratingQuestionsHTML}}</h2>
+        <div id="RatingQueLiFeedback">
+            {% for question in Questions.Rating %}
+                <div class="fbRow">
+                    <div id="questionRating{{forloop.counter}}Feedback" class="RatingQuestion" onclick="edittextContent(this,'feedback')">
+                        {{question}}
+                    </div>
+                    <button onclick="deleteQuestion(this.parentElement,'Rating')"  class="deleteButton">
+                            {{DeleteHTML}}
+                    </button>
                 </div>
-                <button onclick="deleteQuestion(this.parentElement,'Rating')">
-                        {{DeleteHTML}}
-                </button>
-            </div>
-        {% endfor %}
-    </div>
-    <div>
-        <input id="newRatingQueTextFeedback" placeholder="{{newQuestionPlaceholderHTML}}">
-        <button id="newRatingQueButtonFeedback" onclick="addQuestion('Rating')">
-            {{AddHTML}}
-        </button>
+            {% endfor %}
+        </div>
+        <div class="rowListBottom">
+            <input id="newRatingQueTextFeedback" placeholder="{{newQuestionPlaceholderHTML}}" class="endlistInput">
+            <button id="newRatingQueButtonFeedback" class="newButton endlistButton" onclick="addQuestion('Rating')">
+                {{AddHTML}}
+            </button>
+        </div>
     </div>
 </div>

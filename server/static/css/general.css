@@ -10,10 +10,24 @@
     background-color: rgb(217, 230, 172);
 }
 
-/* classes for login/registration pages */
+.rightDownCorner{
+    position: fixed;
+    top:80vh;
+    left:90vw;
+}
+
 .twoFacedBlock{
     display: flex;
 }
+
+.centerTitle{
+    max-width:20vw;
+    margin-left: 35vw;
+    margin-top: 7vh;
+    text-align: center;
+}
+
+/* classes for login/registration pages */
 
 .faceBlock{
     display: flexbox;
@@ -38,10 +52,11 @@
 .rowList{
     background-color: rgb(140 185 115);
     width: 30vw;
-    margin-left: 30vw;
+    margin-left: 10vw;
     margin-top: 5vh;
     max-height: 90vh;
     overflow-y:auto;
+    text-align: center;
 }
 
 .fbRow{
@@ -54,11 +69,29 @@
     font-size: medium;
     font-weight: bold;
     background-color: rgb(21, 145, 77);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.endlistInput,.rowListBottom{
+    margin-top: 1vh;
+}
+
+.rowListBottom{
+    margin-left: 7vw;
+    margin-top: 2vh;
+    width: 10vw;
+    display: flex;
+    padding: 5px;
+}
+
+.endlistInput{
+    height:1.5em;
 }
 
 .endlistButton{
-    margin-left: 10vw;
-    margin-top: 1vh;
+    margin-left: 2.5vw;
     margin-bottom: 1vh;   
 }
 /* classes for block lists */
@@ -95,7 +128,9 @@
 }
 
 .deleteButton{
-    background-color: rgb(143, 96, 26);
+    background-color: rgb(143, 53, 26);
+    width: 2.5em;
+    height: 2.5em;
 }
 
 .bigCircle{
@@ -105,9 +140,3 @@
     font-size: larger;
 }
 
-/* fixed positions */
-.rightDownCorner{
-    position: fixed;
-    top:80vh;
-    left:90vw;
-}

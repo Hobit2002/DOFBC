@@ -3,7 +3,7 @@
         {% if forloop.counter in rowStarts %}
             <div class="blockRow">
         {% endif %}
-        <div class="fbBlock" onclick="userRequest('newFeedback',{'ID':'{{fb.id}}'})">
+        <div class="fbBlock" onclick="userRequest('feedback',{'ID':'{{fb.id}}'})">
             {{fb.name}}
         </div>
         {% if forloop.counter in rowEnds %}
