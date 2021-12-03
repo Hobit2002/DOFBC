@@ -13,6 +13,22 @@
             {{DeleteHTML}}
         </button>
     </div>
+    <div>
+        <label for="createGlobalFeedback">{{createGlobalHTML}}:</label>
+        <input id="createGlobalFeedback" type="text" placeholder="{{FormNameHTML}}">
+        <button onclick="handleButtonClick('newForm',
+            {'ID':feedbackObjId.value,'name':createGlobalFeedback.value},
+            {'{{blankNameFieldLRT}}':createGlobalFeedback.value!==''},method='GET',visible=false,
+            effects={'clearIt':[createGlobalFeedback]})">
+            {{AddHTML}}</button>
+        <label for="gFormsFeedback">{{switchFormHTML}}:</label>
+        <select id="gFormsFeedback" onchange="userRequest('feedbackUpdate',{'ID':feedbackObjId.value,'value':this.value,'parameter':'form'})">
+            <option value=""></option>
+            {% for gForm in gForms %}
+                <option value="{{gForm.id}}">{{gForm.name}}</option>
+            {% endfor %}
+        </select> 
+    </div>
     <div id="questionsFeedback" class="twoFacedBlock">
         <div class="rowList">
             <h2>{{verbalQuestionsHTML}}</h2>

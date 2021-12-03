@@ -8,6 +8,7 @@ class Form(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.TextField(max_length=100)
     jsonQuestions = models.TextField(max_length=1000,default="{}")
+    globalForm = models.BooleanField(default=False,db_index=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,models.CASCADE,null=True,default=None)
 
     def __str__(self):

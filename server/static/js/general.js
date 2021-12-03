@@ -84,3 +84,22 @@ function deleteQuestion(parElem,type){
     }
 
 }
+
+function handleButtonClick(url,paramObject,conditions,method="GET",visible=true,effects={'clearIt':[]}){
+    //check conditions
+    for(errorMessage in conditions){
+        if(!(conditions[errorMessage])){
+            //raise alert
+            alert(errorMessage)
+            return
+        }
+    }
+    //if conditions are valid send requests
+    userRequest(url,paramObject,method,visible)
+    //if request does not redraw the page, execute the effects
+    if(!visible){
+        for(clear in effects["clearIt"]){
+            clear.value=""
+        }
+    }
+}

@@ -13,6 +13,9 @@
     "newQuestionPlaceholderHTML":"Znění nové otázky",
     "AddHTML":"Přidat",
     "DeleteHTML":"x",
-    "LogoutHTML":"Odhlásit se"
-
+    "LogoutHTML":"Odhlásit se",
+    "FormNameHTML":"Název formuláře",
+    "switchFormHTML":"Použít šablonu",
+    "createGlobalHTML":"Uložit jako šablonu",
+    "blankNameFieldLRT":"Název nebyl řádně vyplněn!"
 }

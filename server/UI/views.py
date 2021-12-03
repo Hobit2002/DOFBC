@@ -97,6 +97,8 @@ def deleteObject(request):
     #check connection
     if request.GET["type"]=="feedback":
         obj = getFeedbackObj(request)
+        frm = Form.objects.filter(id=obj.form.id)[0]
+        frm.delete()
     if not obj: return errorPage("NoSuchFBERR",request)
     #delete object
     obj.delete()
@@ -114,6 +116,8 @@ def feedback(request):
     #Form data 
     frm = Form.objects.filter(id=fb.form.id)[0]
     languageDict["Questions"] = json.loads(frm.jsonQuestions)
+    #Load global forms
+    languageDict["gForms"] = Form.objects.filter(user_id = request.user.id,globalForm= True)
     return answer(request,"loggedTemplates/feedback.html",languageDict)
 
 #feedbackUpdate
@@ -137,8 +141,30 @@ def feedbackUpdate(request):
             del questions[queType][index]
         fb.form.jsonQuestions = json.dumps(questions)
         fb.form.save()
+    elif parameter=="form":
+        frm = Form.objects.filter(id=fb.form.id)[0]
+        gForm = Form.objects.filter(id=value,user_id=request.user.id)[0]
+        frm.jsonQuestions = gForm.jsonQuestions
+        frm.save()
+        return redirectToObject('feedback',fb)
     fb.save()
     return HttpResponse('OK')
+
+#new Form
+def newForm(request):
+    #load original
+    fb = getFeedbackObj(request)
+    frm = Form.objects.filter(id=fb.form.id)[0]
+    #create copy
+    gFrm=Form(globalForm=True,name=request.GET["name"],user_id=request.user.id,jsonQuestions=frm.jsonQuestions)
+    #save and leave
+    gFrm.save()
+    return HttpResponse('OK')
+
+#redirect to object
+def redirectToObject(objType,obj):
+    url="/ui/"+objType+"?ID="+str(obj.id)+"&ajaxForm=1"
+    return redirect(url)
 
 #loadLanguageDict
 def loadLanguageDict():
