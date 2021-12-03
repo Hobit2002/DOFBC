@@ -41,7 +41,7 @@ def authenticate(request):
     user = djAuthenticate(password=password,username=username)
     if user != None:
         djLogin(request,user)
-        return redirect("/ui/home")
+        return redirect("/ui/home?&ajaxForm=1")
     #redirect
     
 
@@ -63,7 +63,6 @@ def home(request):
     for rc in range(rowCount+1):
         languageDict["rowStarts"].append(rc*rowLen+1)
         languageDict["rowEnds"].append(rc*rowLen+(rowLen-1)+1)
-    print(languageDict["rowStarts"])
     #render page
     return answer(request,"loggedTemplates/home.html",languageDict)
 
@@ -88,6 +87,17 @@ def getFeedbackObj(request):
         return 0
     if fb==None:return 0
     else:return fb
+
+#delete object
+def deleteObject(request):
+    #check connection
+    if request.GET["type"]=="feedback":
+        obj = getFeedbackObj(request)
+    if not obj: return errorPage("NoSuchFBERR",request)
+    #delete object
+    obj.delete()
+    #redirect
+    return redirect(request.GET['redirect'])
 
 
 #feedback:returns page, where feedback can be edited
