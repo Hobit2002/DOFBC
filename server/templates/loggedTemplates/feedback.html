@@ -1,59 +1,62 @@
-<input type="hidden" id="feedbackObjId" value="{{Feedback.id}}">
-<div class="centerTitle">
-    <div id="nameFeedback" onclick="edittextContent(this,'feedback')">
-        {% if Feedback.name %}
-            {{Feedback.name}}
-        {% else %}
-            <i>{{NoNameYetHTML}}</i>
-        {% endif %}
-    </div>
-    <button onclick="userRequest('deleteObject',{'type':'feedback','ID':feedbackObjId.value,'redirect':historyList[historyList.length-2]})" class="deleteButton">
-        {{DeleteHTML}}
-    </button>
-</div>
-<div id="questionsFeedback" class="twoFacedBlock">
-    <div class="rowList">
-        <h2>{{verbalQuestionsHTML}}</h2>
-        <div id="VerbalQueLiFeedback">
-            {% for question in Questions.Verbal %}
-                <div class="fbRow">
-                    <!-- if you change these questions remember to update hidden questionFeedbackTemplate too -->
-                    <div id="questionVerbal{{forloop.counter}}Feedback" class="VerbalQuestion" onclick="edittextContent(this,'feedback')">
-                        {{question}}
-                    </div>
-                    <button onclick="deleteQuestion(this.parentElement,'Verbal')" class="deleteButton">
-                        {{DeleteHTML}}
-                    </button>
-                </div>
-            {% endfor %}
+{% extends 'loggedinTemplate.html' %}
+{% block content %}
+    <input type="hidden" id="feedbackObjId" value="{{Feedback.id}}">
+    <div class="centerTitle">
+        <div id="nameFeedback" onclick="edittextContent(this,'feedback')">
+            {% if Feedback.name %}
+                {{Feedback.name}}
+            {% else %}
+                <i>{{NoNameYetHTML}}</i>
+            {% endif %}
         </div>
-        <div class="rowListBottom">
-            <input id="newVerbalQueTextFeedback" placeholder="{{newQuestionPlaceholderHTML}}" class="endlistInput">
-            <button id="newVerbalQueButtonFeedback" class="newButton endlistButton" onclick="addQuestion('Verbal')">
-                {{AddHTML}}
-            </button>
-        </div>
+        <button onclick="userRequest('deleteObject',{'type':'feedback','ID':feedbackObjId.value,'redirect':historyList[historyList.length-2]})" class="deleteButton">
+            {{DeleteHTML}}
+        </button>
     </div>
-
-    <div class="rowList">
-        <h2>{{ratingQuestionsHTML}}</h2>
-        <div id="RatingQueLiFeedback">
-            {% for question in Questions.Rating %}
-                <div class="fbRow">
-                    <div id="questionRating{{forloop.counter}}Feedback" class="RatingQuestion" onclick="edittextContent(this,'feedback')">
-                        {{question}}
-                    </div>
-                    <button onclick="deleteQuestion(this.parentElement,'Rating')"  class="deleteButton">
+    <div id="questionsFeedback" class="twoFacedBlock">
+        <div class="rowList">
+            <h2>{{verbalQuestionsHTML}}</h2>
+            <div id="VerbalQueLiFeedback">
+                {% for question in Questions.Verbal %}
+                    <div class="fbRow">
+                        <!-- if you change these questions remember to update hidden questionFeedbackTemplate too -->
+                        <div id="questionVerbal{{forloop.counter}}Feedback" class="VerbalQuestion" onclick="edittextContent(this,'feedback')">
+                            {{question}}
+                        </div>
+                        <button onclick="deleteQuestion(this.parentElement,'Verbal')" class="deleteButton">
                             {{DeleteHTML}}
-                    </button>
-                </div>
-            {% endfor %}
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="rowListBottom">
+                <input id="newVerbalQueTextFeedback" placeholder="{{newQuestionPlaceholderHTML}}" class="endlistInput">
+                <button id="newVerbalQueButtonFeedback" class="newButton endlistButton" onclick="addQuestion('Verbal')">
+                    {{AddHTML}}
+                </button>
+            </div>
         </div>
-        <div class="rowListBottom">
-            <input id="newRatingQueTextFeedback" placeholder="{{newQuestionPlaceholderHTML}}" class="endlistInput">
-            <button id="newRatingQueButtonFeedback" class="newButton endlistButton" onclick="addQuestion('Rating')">
-                {{AddHTML}}
-            </button>
+
+        <div class="rowList">
+            <h2>{{ratingQuestionsHTML}}</h2>
+            <div id="RatingQueLiFeedback">
+                {% for question in Questions.Rating %}
+                    <div class="fbRow">
+                        <div id="questionRating{{forloop.counter}}Feedback" class="RatingQuestion" onclick="edittextContent(this,'feedback')">
+                            {{question}}
+                        </div>
+                        <button onclick="deleteQuestion(this.parentElement,'Rating')"  class="deleteButton">
+                                {{DeleteHTML}}
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="rowListBottom">
+                <input id="newRatingQueTextFeedback" placeholder="{{newQuestionPlaceholderHTML}}" class="endlistInput">
+                <button id="newRatingQueButtonFeedback" class="newButton endlistButton" onclick="addQuestion('Rating')">
+                    {{AddHTML}}
+                </button>
+            </div>
         </div>
     </div>
-</div>
+{% endblock %}

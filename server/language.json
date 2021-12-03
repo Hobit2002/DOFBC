@@ -12,6 +12,7 @@
     "verbalQuestionsHTML":"Otázky s otevřenou odpovědí",
     "newQuestionPlaceholderHTML":"Znění nové otázky",
     "AddHTML":"Přidat",
-    "DeleteHTML":"x"
+    "DeleteHTML":"x",
+    "LogoutHTML":"Odhlásit se"
 
 }

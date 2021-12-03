@@ -1,14 +1,1 @@
-{% load static %}
-    <div>
-        <form action="Home"><button onclick="Logout()" class="odhlasit homebut" id="LogoutButton">{{Logout}}</button></form>
-        <form action="Search" hidden><input type="text" name="LookForThis" class="hl" placeholder="{{SearchHTML}}" hidden></form>
-       
-    </div>
-
-<script>
-    
-    function Logout() {
-        document.cookie = "BasicInfo=; expires= Thu, 21 Aug 2014 20:00:00 UTC";
-        document.cookie = "MetaInfo=; expires= Thu, 21 Aug 2014 20:00:00 UTC";
-    }
-</script>
+<button onclick="userRequest('logout')" class="topButton right" >{{LogoutHTML}}</button>

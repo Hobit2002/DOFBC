@@ -10,5 +10,6 @@ urlpatterns = [
     path('newFeedback',uiViews.newFeedback),
     path('feedback',uiViews.feedback),
     path('feedbackUpdate',uiViews.feedbackUpdate),
-    path('deleteObject',uiViews.deleteObject)
+    path('deleteObject',uiViews.deleteObject),
+    path('logout',uiViews.logout)
 ]

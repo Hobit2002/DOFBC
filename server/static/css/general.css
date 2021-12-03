@@ -10,10 +10,13 @@
     background-color: rgb(217, 230, 172);
 }
 
+.right,.rightDownCorner{
+    left:90vw;
+}
+
 .rightDownCorner{
     position: fixed;
     top:80vh;
-    left:90vw;
 }
 
 .twoFacedBlock{
@@ -141,5 +144,16 @@
     width: 9em;
     font-weight: bolder;
     font-size: larger;
+}
+
+.topButton{
+    position: fixed;
+    top: 1vh;
+    border-radius: 30%;
+    padding:16px;
+    font-weight: bold;
+    color: rgb(255,255,240);
+    background-color: rgb(15, 173, 23);
+    z-index: 2;
 }
 

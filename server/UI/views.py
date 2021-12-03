@@ -1,6 +1,6 @@
 from django.http.response import HttpResponse
 from django.shortcuts import render,redirect
-from django.contrib.auth import authenticate as djAuthenticate, login as djLogin
+from django.contrib.auth import authenticate as djAuthenticate, login as djLogin,logout as djLogout
 from django.contrib.auth.models import User
 from django.urls import reverse
 from urllib.parse import urlencode
@@ -44,11 +44,15 @@ def authenticate(request):
         return redirect("/ui/home?&ajaxForm=1")
     #redirect
     
-
 #login:logs user in
 def login(request):
     languageDict = loadLanguageDict()
     return answer(request,"unloggedTemplates/login.html",languageDict)
+
+#logout
+def logout(request):
+    djLogout(request)
+    return redirect("/ui/login?&ajaxForm=1")
 
 #home:displays created feedbacks
 def home(request):
