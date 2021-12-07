@@ -24,13 +24,23 @@
 }
 
 .centerTitle{
-    max-width:20vw;
+    width:20vw;
     margin-left: 35vw;
     margin-top: 7vh;
     text-align: center;
     font-size: 1.5em; 
     font-weight: bold;
-    display: flex;
+}
+
+.topLine{
+    background-color:rgb(62, 107, 54);
+    max-width:24vw;
+    padding:0.5em;
+    margin-left: 32vw;
+    margin-top:3vh;
+    font-size:1.2em;
+    color:rgb(212, 236, 192);
+    font-weight:bold;
 }
 
 /* classes for login/registration pages */

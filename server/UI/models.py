@@ -19,7 +19,7 @@ class Feedback(models.Model):
     name = models.TextField(max_length=100)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,models.CASCADE,null=True,default=None)
     status = models.CharField(max_length=1,choices=statusChoices,default='W')
-    form = models.ForeignKey(Form,models.DO_NOTHING,null=True,default=None)
+    form = models.ForeignKey(Form,models.CASCADE,null=True,default=None)
     jsonAnswers = models.TextField(max_length=1000,default="{}")
 
     def __str__(self):

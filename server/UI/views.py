@@ -6,7 +6,8 @@ from django.urls import reverse
 from urllib.parse import urlencode
 from UI.models import *
 from django.core.exceptions import ValidationError
-import json
+import json,qrcode
+from PIL import Image
 #answer:renders the answer according to universal rules
 def answer(request,pDir,languageDict):
     if "ajaxForm" in dict(request.GET).keys():
@@ -79,6 +80,17 @@ def newFeedback(request):
     #create default feedback
     fb = Feedback(user_id=request.user.id,form=form)
     fb.save()
+    #create and save QR code
+    languageDict = loadLanguageDict()
+    qrObj = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=10,
+        border=4)
+    qrObj.add_data(languageDict["domain"]+languageDict["fillAddressURL"]%(fb.id))
+    qrImf = qrObj.make_image().convert('RGB')
+    qrImf.save("static/QRcodes/"+str(fb.id)+".png")
+    #redirect to feedback page
     url="{}?{}".format('/ui/feedback',urlencode({"ID":fb.id}))
     return redirect(url)
 
@@ -105,7 +117,6 @@ def deleteObject(request):
     #redirect
     return redirect(request.GET['redirect'])
 
-
 #feedback:returns page, where feedback can be edited
 def feedback(request):
     fb = getFeedbackObj(request)
@@ -116,6 +127,8 @@ def feedback(request):
     #Form data 
     frm = Form.objects.filter(id=fb.form.id)[0]
     languageDict["Questions"] = json.loads(frm.jsonQuestions)
+    #QR url
+    languageDict["QRurl"] = "QRcodes/%s.png"%(fb.id)
     #Load global forms
     languageDict["gForms"] = Form.objects.filter(user_id = request.user.id,globalForm= True)
     return answer(request,"loggedTemplates/feedback.html",languageDict)

@@ -1,34 +1,19 @@
 {% extends 'loggedinTemplate.html' %}
 {% block content %}
     <input type="hidden" id="feedbackObjId" value="{{Feedback.id}}">
-    <div class="centerTitle">
-        <div id="nameFeedback" onclick="edittextContent(this,'feedback')">
-            {% if Feedback.name %}
-                {{Feedback.name}}
-            {% else %}
-                <i>{{NoNameYetHTML}}</i>
-            {% endif %}
-        </div>
-        <button onclick="userRequest('deleteObject',{'type':'feedback','ID':feedbackObjId.value,'redirect':historyList[historyList.length-2]})" class="deleteButton">
+    <div class="centerTitle" id="nameFeedback" onclick="edittextContent(this,'feedback')">
+        {% if Feedback.name %}
+            {{Feedback.name}}
+        {% else %}
+            <i>{{NoNameYetHTML}}</i>
+        {% endif %}
+        <button onclick="userRequest('deleteObject',{'type':'feedback','ID':feedbackObjId.value,'redirect':historyList[historyList.length-2]})" content-editable="false" class="deleteButton">
             {{DeleteHTML}}
         </button>
     </div>
-    <div>
-        <label for="createGlobalFeedback">{{createGlobalHTML}}:</label>
-        <input id="createGlobalFeedback" type="text" placeholder="{{FormNameHTML}}">
-        <button onclick="handleButtonClick('newForm',
-            {'ID':feedbackObjId.value,'name':createGlobalFeedback.value},
-            {'{{blankNameFieldLRT}}':createGlobalFeedback.value!==''},method='GET',visible=false,
-            effects={'clearIt':[createGlobalFeedback]})">
-            {{AddHTML}}</button>
-        <label for="gFormsFeedback">{{switchFormHTML}}:</label>
-        <select id="gFormsFeedback" onchange="userRequest('feedbackUpdate',{'ID':feedbackObjId.value,'value':this.value,'parameter':'form'})">
-            <option value=""></option>
-            {% for gForm in gForms %}
-                <option value="{{gForm.id}}">{{gForm.name}}</option>
-            {% endfor %}
-        </select> 
-    </div>
+
+    {% include 'loggedTemplates/feedback/topLine.html' %}
+
     <div id="questionsFeedback" class="twoFacedBlock">
         <div class="rowList">
             <h2>{{verbalQuestionsHTML}}</h2>

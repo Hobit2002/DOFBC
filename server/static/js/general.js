@@ -15,7 +15,6 @@ function userRequest(url,paramObject={},method="GET",visible=true){
         if(request.readyState == 4 && request.status == 200 && visible) {
             //redraw content block
             utContent.innerHTML = request.responseText
-            console.log('utContent obtained following data:',request.responseText) 
             window.history.pushState({},"",request.responseURL.replace("&ajaxForm=1",""))
             historyList.push(request.responseURL) 
         }
@@ -39,7 +38,7 @@ function commitChanges(site,object){
     address = site +"Update"
     parameter = object.id.slice(0,-1*(site.length))
     objId = document.getElementById(site+"ObjId").value
-    userRequest(address,{"ID":objId,"parameter":parameter,"value":object.innerText},method="GET",visible=false)
+    userRequest(address,{"ID":objId,"parameter":parameter,"value":object.firstChild.nodeValue},method="GET",visible=false)
 }
 
 function edittextContent(object,site){
@@ -102,4 +101,11 @@ function handleButtonClick(url,paramObject,conditions,method="GET",visible=true,
             clear.value=""
         }
     }
+}
+
+function switchToplineWindowBlock(element){
+    var newPrefix = String(1 - parseInt(element.id[0]))
+    var newId = newPrefix+element.id.slice(1)
+    element.hidden=true
+    document.getElementById(newId).hidden=false
 }

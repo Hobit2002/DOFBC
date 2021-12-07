@@ -1,0 +1,44 @@
+{% load static %}
+<div class="topLine">
+    <div class="toplineWindow">
+        <div id="0templateWindowFeedback" class="toplineWindowButton" hidden onclick="switchToplineWindowBlock(this)">
+            {{templateWindowHTML}}
+        </div>
+        <div id="1templateWindowFeedback">
+            <div>
+                <label for="createGlobalFeedback">{{createGlobalHTML}}:</label>
+                <input id="createGlobalFeedback" type="text" placeholder="{{FormNameHTML}}">
+                <button class="newButton" onclick="handleButtonClick('newForm',
+                    {'ID':feedbackObjId.value,'name':createGlobalFeedback.value},
+                    {'{{blankNameFieldLRT}}':createGlobalFeedback.value!==''},method='GET',visible=false,
+                    effects={'clearIt':[createGlobalFeedback]})">
+                    {{AddHTML}}</button>
+            </div>
+            <div>
+                <label for="gFormsFeedback">{{switchFormHTML}}:</label>
+                <select id="gFormsFeedback" onchange="userRequest('feedbackUpdate',{'ID':feedbackObjId.value,'value':this.value,'parameter':'form'})">
+                    <option value=""></option>
+                    {% for gForm in gForms %}
+                        <option value="{{gForm.id}}">{{gForm.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="toplineWindow">
+        <div id="0QRWindowFeedback" class="toplineWindowButton" onclick="switchToplineWindowBlock(this)">
+            {{QRWindowHTML}}
+        </div>
+        <div id="1QRWindowFeedback" hidden>
+            <img src="{% static '' %}{{QRurl}}">
+        </div>
+    </div>
+    <div class="toplineWindow">
+        <div id="0statusWindowFeedback" class="toplineWindowButton" onclick="switchToplineWindowBlock(this)">
+            {{statusWindowHTML}}
+        </div>
+        <div id="1statusWindowFeedback" hidden>
+        </div>
+    </div>
+
+</div>
