@@ -34,13 +34,42 @@
 
 .topLine{
     background-color:rgb(62, 107, 54);
-    max-width:24vw;
+    max-width:45vw;
     padding:0.5em;
-    margin-left: 32vw;
+    margin-left: 25vw;
     margin-top:3vh;
     font-size:1.2em;
     color:rgb(212, 236, 192);
     font-weight:bold;
+    display: flex;
+}
+
+.toplineWindowButton{
+    max-width: 7vw;
+    height:10vh;
+    padding: 4px;
+    font-size: larger;
+    margin-left:3vw;
+    background-color: rgb(101, 128, 96);
+    text-align: center;
+}
+
+.middlePageFixed{
+    position: fixed;
+    top:15vh;
+    left:27vw;
+    padding: 1em;
+    background-color: rgb(36, 59, 31);
+}
+
+.centerImage{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.goUp{
+    margin-top:-1em;
 }
 
 /* classes for login/registration pages */
@@ -134,7 +163,7 @@
 }
 
 /* buttons */
-.newButton,.deleteButton{
+.closeButton,.newButton,.deleteButton{
    border-radius: 60%;
    padding:8px; 
 }
@@ -143,10 +172,13 @@
     background-color: rgb(7, 148, 117);
 }
 
-.deleteButton{
-    background-color: rgb(143, 53, 26);
+.closeButton,.deleteButton{
     width: 2.5em;
     height: 2.5em;
+}
+
+.deleteButton{
+    background-color: rgb(143, 53, 26);
 }
 
 .bigCircle{
@@ -167,3 +199,8 @@
     z-index: 2;
 }
 
+.closeButton{
+    float:right;
+    background-color: rgb(143, 102, 26);
+    margin-left:0.75em;
+}

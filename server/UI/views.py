@@ -7,7 +7,6 @@ from urllib.parse import urlencode
 from UI.models import *
 from django.core.exceptions import ValidationError
 import json,qrcode
-from PIL import Image
 #answer:renders the answer according to universal rules
 def answer(request,pDir,languageDict):
     if "ajaxForm" in dict(request.GET).keys():

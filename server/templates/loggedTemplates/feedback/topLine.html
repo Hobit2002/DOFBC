@@ -5,6 +5,7 @@
             {{templateWindowHTML}}
         </div>
         <div id="1templateWindowFeedback">
+            <button class="closeButton" onclick="switchToplineWindowBlock(this.parentElement)">{{CloseHTML}}</button><br>
             <div>
                 <label for="createGlobalFeedback">{{createGlobalHTML}}:</label>
                 <input id="createGlobalFeedback" type="text" placeholder="{{FormNameHTML}}">
@@ -29,8 +30,9 @@
         <div id="0QRWindowFeedback" class="toplineWindowButton" onclick="switchToplineWindowBlock(this)">
             {{QRWindowHTML}}
         </div>
-        <div id="1QRWindowFeedback" hidden>
-            <img src="{% static '' %}{{QRurl}}">
+        <div id="1QRWindowFeedback" class="middlePageFixed" hidden>
+            <button class="closeButton goUp" onclick="switchToplineWindowBlock(this.parentElement)">{{CloseHTML}}</button>
+            <img src="{% static '' %}{{QRurl}}" class="centerImage">
         </div>
     </div>
     <div class="toplineWindow">
@@ -38,6 +40,7 @@
             {{statusWindowHTML}}
         </div>
         <div id="1statusWindowFeedback" hidden>
+            {% include "loggedTemplates/feedback/staus.html" %}
         </div>
     </div>
 

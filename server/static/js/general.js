@@ -1,6 +1,6 @@
 const historyList = []
 
-function userRequest(url,paramObject={},method="GET",visible=true){
+function userRequest(url,paramObject={},method="GET",visible=true,altHtmlDestination=false){
     //send request
     var request = new XMLHttpRequest()
     //write url
@@ -14,9 +14,12 @@ function userRequest(url,paramObject={},method="GET",visible=true){
     request.onreadystatechange = function() {
         if(request.readyState == 4 && request.status == 200 && visible) {
             //redraw content block
-            utContent.innerHTML = request.responseText
-            window.history.pushState({},"",request.responseURL.replace("&ajaxForm=1",""))
-            historyList.push(request.responseURL) 
+            var destination = altHtmlDestination ? altHtmlDestination : utContent;
+            destination.innerHTML = request.responseText
+            if(!altHtmlDestination){
+                window.history.pushState({},"",request.responseURL.replace("&ajaxForm=1",""))
+                historyList.push(request.responseURL)
+            } 
         }
     }
     //send XMLHttpRequest
