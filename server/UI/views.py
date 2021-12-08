@@ -128,6 +128,9 @@ def feedback(request):
     languageDict["Questions"] = json.loads(frm.jsonQuestions)
     #QR url
     languageDict["QRurl"] = "QRcodes/%s.png"%(fb.id)
+    #status
+    languageDict["Status"] = fb.status
+    languageDict["StatusWord"] = languageDict[fb.status+"FBStatus"]
     #Load global forms
     languageDict["gForms"] = Form.objects.filter(user_id = request.user.id,globalForm= True)
     return answer(request,"loggedTemplates/feedback.html",languageDict)
@@ -187,3 +190,18 @@ def errorPage(message,request):
     langugageDict = loadLanguageDict()
     langugageDict["ErrMsg"] = langugageDict[message]
     return answer(request,"errorPage.html",langugageDict)
+
+#change status
+def changeStatus(request):
+    fb = getFeedbackObj(request)
+    if not fb:return errorPage("NoSuchFBERR",request)
+    languageDict = loadLanguageDict()
+    #change status
+    statusList = ["W","A","C"]
+    newStatus = statusList[statusList.index(fb.status)+int(request.GET["dir"])]
+    fb.status = newStatus
+    fb.save()
+    languageDict["Status"] = newStatus
+    languageDict["StatusWord"] = languageDict[fb.status+"FBStatus"]
+    #return new status block
+    return answer(request,"loggedTemplates/feedback/status.html",languageDict)    

@@ -12,5 +12,6 @@ urlpatterns = [
     path('feedbackUpdate',uiViews.feedbackUpdate),
     path('deleteObject',uiViews.deleteObject),
     path('logout',uiViews.logout),
-    path('newForm',uiViews.newForm)
+    path('newForm',uiViews.newForm),
+    path('changeStatus',uiViews.changeStatus)
 ]

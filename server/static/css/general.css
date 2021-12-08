@@ -72,6 +72,18 @@
     margin-top:-1em;
 }
 
+.goRight{
+    margin-right: -1em;
+}
+
+.pushLeft{
+    margin-left: 1em;
+}
+
+.oneRow{
+    display: flex;
+}
+
 /* classes for login/registration pages */
 
 .faceBlock{
@@ -203,4 +215,15 @@
     float:right;
     background-color: rgb(143, 102, 26);
     margin-left:0.75em;
+}
+
+.nextButton{
+    display: inline-block;
+    margin-left: 2em;
+    border-radius: 50%;
+    height: 3em;
+    width: 5em;
+    font-weight:bold;
+    background-color: rgb(43, 61, 40);
+    color: rgb(212, 236, 192);
 }

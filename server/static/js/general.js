@@ -107,8 +107,14 @@ function handleButtonClick(url,paramObject,conditions,method="GET",visible=true,
 }
 
 function switchToplineWindowBlock(element){
+    //hide all topline content elements
+    var toplineConts = Array.from(document.getElementsByClassName("toplineWindow"))
+    for(el in toplineConts){
+        toplineConts[el].children[0].hidden = false 
+        toplineConts[el].children[1].hidden = true}
+    //show the appropriate one
     var newPrefix = String(1 - parseInt(element.id[0]))
     var newId = newPrefix+element.id.slice(1)
-    element.hidden=true
+    element.hidden = true
     document.getElementById(newId).hidden=false
 }

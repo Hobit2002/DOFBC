@@ -40,7 +40,10 @@
             {{statusWindowHTML}}
         </div>
         <div id="1statusWindowFeedback" hidden>
-            {% include "loggedTemplates/feedback/staus.html" %}
+            <button class="closeButton" onclick="switchToplineWindowBlock(this.parentElement)">{{CloseHTML}}</button><br>
+            <div class="oneRow pushLeft">
+                {% include "loggedTemplates/feedback/status.html" %}
+            </div>
         </div>
     </div>
 

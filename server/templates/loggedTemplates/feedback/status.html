@@ -1,0 +1,7 @@
+{% if Status != 'W' %}
+    <button class="nextButton" onclick="userRequest('changeStatus',{'ID':feedbackObjId.value,'dir':-1},'GET',true,this.parentElement)">{{previousStatusHTML}}</button>
+{% endif %}
+{{StatusHTML}}:{{StatusWord}}
+{% if Status != 'C' %}
+    <button class="nextButton" onclick="userRequest('changeStatus',{'ID':feedbackObjId.value,'dir':1},'GET',true,this.parentElement)">{{nextStatusHTML}}</button>
+{% endif %}

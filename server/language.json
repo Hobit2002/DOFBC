@@ -23,5 +23,11 @@
     "QRWindowHTML":"QR kód pro vyplnění",
     "statusWindowHTML":"Stav vyplnitelnosti",
     "fillAddressURL":"/api/fillFeedback?ID=%s",
-    "CloseHTML":"x"
+    "CloseHTML":"x",
+    "WFBStatus":"Připravovaná",
+    "AFBStatus":"Otevřená",
+    "CFBStatus":"Uzavřená",
+    "previousStatusHTML":"<=",
+    "nextStatusHTML":"=>",
+    "StatusHTML":"Status"
 }
