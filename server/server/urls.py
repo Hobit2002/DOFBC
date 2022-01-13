@@ -20,5 +20,6 @@ from UI import views as uiViews
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', uiViews.welcome),
-    path('ui/',include('UI.urls'))
+    path('ui/',include('UI.urls')),
+    path('mi/',include('MI.urls'))
 ]
