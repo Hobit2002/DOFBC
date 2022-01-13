@@ -1,0 +1,17 @@
+{% extends 'loggedinTemplate.html' %}
+{% block content %}
+    <div class="blockList">
+        {% for fb in feedbacks %}
+            {% if forloop.counter in rowStarts %}
+                <div class="blockRow">
+            {% endif %}
+            <div class="fbBlock" onclick="userRequest('feedback',{'ID':'{{fb.id}}'})">
+                {{fb.name}}
+            </div>
+            {% if forloop.counter in rowEnds %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        <button class="newButton bigCircle rightDownCorner" onclick="userRequest('newFeedback')">{{NewFBHTML}}</button>
+    </div>
+{% endblock %}

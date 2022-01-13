@@ -1,0 +1,50 @@
+{% load static %}
+<div class="topLine">
+    <div class="toplineWindow">
+        <div id="0templateWindowFeedback" class="toplineWindowButton" hidden onclick="switchToplineWindowBlock(this)">
+            {{templateWindowHTML}}
+        </div>
+        <div id="1templateWindowFeedback">
+            <button class="closeButton" onclick="switchToplineWindowBlock(this.parentElement)">{{CloseHTML}}</button><br>
+            <div>
+                <label for="createGlobalFeedback">{{createGlobalHTML}}:</label>
+                <input id="createGlobalFeedback" type="text" placeholder="{{FormNameHTML}}">
+                <button class="newButton" onclick="handleButtonClick('newForm',
+                    {'ID':feedbackObjId.value,'name':createGlobalFeedback.value},
+                    {'{{blankNameFieldLRT}}':createGlobalFeedback.value!==''},method='GET',visible=false,
+                    effects={'clearIt':[createGlobalFeedback]})">
+                    {{AddHTML}}</button>
+            </div>
+            <div>
+                <label for="gFormsFeedback">{{switchFormHTML}}:</label>
+                <select id="gFormsFeedback" onchange="userRequest('feedbackUpdate',{'ID':feedbackObjId.value,'value':this.value,'parameter':'form'})">
+                    <option value=""></option>
+                    {% for gForm in gForms %}
+                        <option value="{{gForm.id}}">{{gForm.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="toplineWindow">
+        <div id="0QRWindowFeedback" class="toplineWindowButton dispNoneMobile" onclick="switchToplineWindowBlock(this)">
+            {{QRWindowHTML}}
+        </div>
+        <div id="1QRWindowFeedback" class="middlePageFixed" hidden>
+            <button class="closeButton goUp" onclick="switchToplineWindowBlock(this.parentElement)">{{CloseHTML}}</button>
+            <img src="{% static '' %}{{QRurl}}" class="centerImage">
+        </div>
+    </div>
+    <div class="toplineWindow">
+        <div id="0statusWindowFeedback" class="toplineWindowButton dispNoneMobile" onclick="switchToplineWindowBlock(this)">
+            {{statusWindowHTML}}
+        </div>
+        <div id="1statusWindowFeedback" hidden>
+            <button class="closeButton" onclick="switchToplineWindowBlock(this.parentElement)">{{CloseHTML}}</button><br>
+            <div class="oneRow pushLeft">
+                {% include "loggedTemplates/feedback/status.html" %}
+            </div>
+        </div>
+    </div>
+
+</div>

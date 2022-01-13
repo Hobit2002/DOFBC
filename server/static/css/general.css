@@ -1,0 +1,228 @@
+/* background for all pages*/
+.overlay{
+    position: fixed;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0mm;
+    padding: 0mm;
+    top:0px;
+    left:0px;
+    background-color: rgb(217, 230, 172);
+}
+
+.right,.rightDownCorner{
+    left:90vw;
+}
+
+.rightDownCorner{
+    position: fixed;
+    top:80vh;
+}
+
+.twoFacedBlock{
+    display: flex;
+}
+
+.centerTitle{
+    width:20vw;
+    margin-left: 35vw;
+    margin-top: 7vh;
+    text-align: center;
+    font-size: 1.5em; 
+    font-weight: bold;
+}
+
+.topLine{
+    background-color:rgb(62, 107, 54);
+    max-width:45vw;
+    padding:0.5em;
+    margin-left: 25vw;
+    margin-top:3vh;
+    font-size:1.2em;
+    color:rgb(212, 236, 192);
+    font-weight:bold;
+    display: flex;
+}
+
+.toplineWindowButton{
+    max-width: 7vw;
+    height:10vh;
+    padding: 4px;
+    font-size: larger;
+    margin-left:3vw;
+    background-color: rgb(101, 128, 96);
+    text-align: center;
+}
+
+.middlePageFixed{
+    position: fixed;
+    top:15vh;
+    left:27vw;
+    padding: 1em;
+    background-color: rgb(36, 59, 31);
+}
+
+.centerImage{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.goUp{
+    margin-top:-1em;
+}
+
+.goRight{
+    margin-right: -1em;
+}
+
+.pushLeft{
+    margin-left: 1em;
+}
+
+.oneRow{
+    display: flex;
+}
+
+/* classes for login/registration pages */
+
+.faceBlock{
+    padding: 3vw;
+    max-height: 90vh;
+    overflow-y:auto;
+}
+
+.aboutApp{
+    width: 50vw;
+    margin-left: 20vw;
+    margin-bottom: 10vh;
+    background-color: rgb(159, 189, 124);
+}
+
+.formBlock{
+    background-color: rgb(106, 168, 95);
+    width:10vw;
+}
+
+/* classes for row lists */
+.rowList{
+    background-color: rgb(140 185 115);
+    width: 30vw;
+    margin-left: 10vw;
+    margin-top: 5vh;
+    max-height: 90vh;
+    overflow-y:auto;
+    text-align: center;
+}
+
+.fbRow{
+    min-height: 4vh;
+    width: 16vw;
+    margin-top: 0.7vh;
+    margin-left: 7vw;
+    padding: 2px;
+    text-align: center;
+    font-size: medium;
+    font-weight: bold;
+    background-color: rgb(21, 145, 77);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.endlistInput,.rowListBottom{
+    margin-top: 1vh;
+}
+
+.rowListBottom{
+    margin-left: 7vw;
+    margin-top: 2vh;
+    width: 10vw;
+    display: flex;
+    padding: 5px;
+}
+
+.endlistInput{
+    height:1.5em;
+}
+
+.endlistButton{
+    margin-left: 2.5vw;
+    margin-bottom: 1vh;   
+}
+/* classes for block lists */
+.blockList{
+    margin-top: 8vh;
+    margin-left: 10vw;
+    max-height: 95vh;
+    overflow-y: auto;
+}
+
+.fbBlock{
+    min-height: 18vh;
+    width: 9vw;
+    margin:1em;
+    padding: 5px;
+    background-color: rgb(21, 145, 77);
+    text-align: center;
+    font-size: medium;
+    font-weight: bold;
+}
+
+.blockRow{
+    display: flex;
+}
+
+/* buttons */
+.closeButton,.newButton,.deleteButton{
+   border-radius: 60%;
+   padding:8px; 
+}
+
+.newButton{
+    background-color: rgb(7, 148, 117);
+}
+
+.closeButton,.deleteButton{
+    width: 2.5em;
+    height: 2.5em;
+}
+
+.deleteButton{
+    background-color: rgb(143, 53, 26);
+}
+
+.bigCircle{
+    height: 9em;
+    width: 9em;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+.topButton{
+    position: fixed;
+    top: 1vh;
+    border-radius: 30%;
+    padding:16px;
+    font-weight: bold;
+    color: rgb(255,255,240);
+    background-color: rgb(15, 173, 23);
+    z-index: 2;
+}
+
+.closeButton{
+    float:right;
+    background-color: rgb(143, 102, 26);
+    margin-left:0.75em;
+}
+
+.nextButton{
+    display: inline-block;
+    margin-left: 2em;
+    border-radius: 50%;
+    height: 3em;
+    width: 5em;
+    font-weight:bold;
+    background-color: rgb(43, 61, 40);
+    color: rgb(212, 236, 192);
+}
