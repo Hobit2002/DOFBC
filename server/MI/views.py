@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from django.http import JsonResponse,HttpResponse
 from django.contrib.auth import authenticate as djAuthenticate,login as djLogin
 from UI.models import *
@@ -15,11 +16,13 @@ def checkAuth(request):
         djLogin(request,user)
     return HttpResponse(str(user != None))
 
+#give CSRF
+def giveCSRF(request):
+    return render(request,"csrfToken.html")
+
 #return feedback rows
 def home(request):
     objList = Feedback.objects.filter(user_id = request.user.id)
     respList = []
     for fb in objList:respList.append({"id":fb.id,"name":fb.name})
     return JsonResponse(respList,safe=False)
-
-#

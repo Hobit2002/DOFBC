@@ -4,4 +4,5 @@ from MI import views as miViews
 urlpatterns = [
     path('checkAuth',miViews.checkAuth),
     path('home',miViews.home),
+    path('giveCSRF',miViews.giveCSRF)
 ]
