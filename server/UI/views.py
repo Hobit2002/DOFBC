@@ -90,7 +90,8 @@ def newFeedback(request):
     qrImf = qrObj.make_image().convert('RGB')
     qrImf.save("static/QRcodes/"+str(fb.id)+".png")
     #redirect to feedback page
-    url="{}?{}".format('/ui/feedback',urlencode({"ID":fb.id}))
+    prefix = "mi" if "MI" in dict(request.GET).keys() else "ui" 
+    url="{}?{}".format('/%s/feedback'%prefix,urlencode({"ID":fb.id}))
     return redirect(url)
 
 #getFeedbackObj
@@ -114,7 +115,10 @@ def deleteObject(request):
     #delete object
     obj.delete()
     #redirect
-    return redirect(request.GET['redirect'])
+    if 'redirect' in dict(request.GET).keys():
+        return redirect(request.GET['redirect'])
+    else:
+        return HttpResponse('OK')
 
 #feedback:returns page, where feedback can be edited
 def feedback(request):

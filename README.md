@@ -2,7 +2,7 @@
 ## Startup
 prerequisities: git,python(>3.7),pip,local sql server (running on port 3306) 
 1. run "git clone https://github.com/Hobit2002/DOFBC"
-2. run "pip install django"
+2. run "pip install django django-cors-headers"
 3. run "python -m pip install qrcode"
 4. open your local database and create:
 * database DOFBC
