@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, please refer to the docs:
+            https://cordova.apache.org/docs/en/latest/
+        Some notes:
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <meta name="referrer" content="unsafe-url">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+        <meta name="color-scheme" content="light dark">
+        <meta name="connect-src" http-equiv="Content-Security-Policy" content="default-src 'self' http://localhost:8001/ https://www.pochlebnik.eu/ https://cdn.jsdelivr.net/;script-src 'unsafe-eval' 'unsafe-inline' 'unsafe-hashes' https://cdn.jsdelivr.net/; script-src-elem 'self' 'unsafe-eval' https://cdn.jsdelivr.net/">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/index.css">
+        <title>DOFBC</title>
+    </head>
+    <body>
+        <div id="hiddenTemplates" hidden>
+            <div id="fbBlockTemplate">
+                <div class="d-inline-block fbBlock" onclick="openFeedback('TempRep0')">
+                    TempRep1
+                </div>
+            </div>
+            <div id="fbRowTemplate">
+                <div class="fbRow">
+                    <div id="questionTempRep2TempRep0Feedback" class="TempRep2Question" onclick="edittextContent(this,'feedback')">
+                        TempRep1
+                    </div>
+                    <button onclick="deleteQuestion(this.parentElement,'TempRep2')"  class="deleteButton">
+                        x
+                    </button>
+                </div>
+            </div>
+            <div id="gFormOptionTemplate">
+                <option value="TempRep0">TempRep1</option>
+            </div>
+            <div id="nextButtonTemplate">
+                <button class="nextButton" onclick="changeStatus(TempRep0)">TempRep1</button>
+            </div>
+            <div id="rowListTemplate">
+                <div class="rowList">
+                    <h2>TempRep0</h2>
+                    <div id="TempRep1QueLiFeedback">
+                    </div>
+                    <div class="rowListBottom">
+                        <input id="newTempRep1QueTextFeedback" placeholder="Znění nové otázky" class="endlistInput">
+                        <button id="newTempRep1QueButtonFeedback" class="newButton endlistButton" onclick="addQuestion('TempRep1')">
+                            Přidat
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="fbStatusTemplate">
+                Status : TempRep0
+            </div>
+        </div>
+        <div class="app">
+            <div class="overlay">
+                <div id="views">
+                    <div id="crossroadView">
+                        <div class="center">
+                            <div>
+                                <button id="fillBut" class="crosroadButton">Vyplnit</button>
+                            </div>
+                            <div>
+                                <button id="editBut" class="crosroadButton" data-targFile="editFbs">Upravit</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="loginView" class="form-group" hidden>
+                        <input id="loginnameLogin" placeholder="login" class="form-control">
+                        <input id="passwordLogin" type="password" placeholder="heslo" class="form-control">    
+                        <button id="loginBut" class="btn btn-success">
+                            Přihlásit se
+                        </button>
+                    </div>
+                    <div id="homeView" hidden>
+                        <div class="blockList">
+                            <div class="container" id="homeFBSpace">
+                            </div>
+                            <button id="newFeedbackHomeBut" class="btn-lg btn-success position-absolute bottom-0 end-0 mb-5 mr-5 p-3 newButton bigCircle rightDownCorner">Nový</button>
+                        </div>
+                    </div>
+                    <div id="feedbackView" hidden>
+                        <input type="hidden" id="feedbackObjId">
+                        <div class="centerTitle">
+                            <div id="nameFeedback" onclick="edittextContent(this,'feedback')"></div>
+                            <button onclick="deleteObject()" content-editable="false" class="deleteButton">
+                                x
+                            </button>
+                        </div>
+                        <div class="topLine">
+                            <div class="toplineWindow">
+                                <div id="0templateWindowFeedback" class="toplineWindowButton" hidden onclick="switchToplineWindowBlock(this)">
+                                    Šablony
+                                </div>
+                                <div id="1templateWindowFeedback">
+                                    <button class="closeButton" onclick="switchToplineWindowBlock(this.parentElement)">x</button><br>
+                                    <div>
+                                        <label for="createGlobalFeedback">Uložit jako šablonu:</label>
+                                        <input id="createGlobalFeedback" type="text" placeholder="Název formuláře">
+                                        <button class="newButton" onclick="handleButtonClick('newForm',
+                                            {'ID':feedbackObjId.value,'name':createGlobalFeedback.value},
+                                            {'Název nebyl řádně vyplněn!':createGlobalFeedback.value!==''},method='GET',visible=false,
+                                            effects={'clearIt':[createGlobalFeedback]})">
+                                            Přidat</button>
+                                    </div>
+                                    <div>
+                                        <label for="gFormsFeedback">Použít šablonu:</label>
+                                        <select id="gFormsFeedback" onchange="useForm()">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="toplineWindow">
+                                <div id="0QRWindowFeedback" class="toplineWindowButton dispNoneMobile" onclick="switchToplineWindowBlock(this)">
+                                    QR kód pro vyplnění
+                                </div>
+                                <div id="1QRWindowFeedback" class="middlePageFixed" hidden>
+                                    <button class="closeButton goUp" onclick="switchToplineWindowBlock(this.parentElement)">x</button>
+                                    <img class="centerImage">
+                                </div>
+                            </div>
+                            <div class="toplineWindow">
+                                <div id="0statusWindowFeedback" class="toplineWindowButton dispNoneMobile" onclick="switchToplineWindowBlock(this)">
+                                    Stav vyplnitelnosti
+                                </div>
+                                <div id="1statusWindowFeedback" hidden>
+                                    <button class="closeButton" onclick="switchToplineWindowBlock(this.parentElement)">x</button><br>
+                                    <div id="statusStateFeedback" class="oneRow pushLeft">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="questionsFeedback" class="twoFacedBlock rowListParentMobile">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="cordova.js"></script>
+        <script src="js/index.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    </body>
+</html>

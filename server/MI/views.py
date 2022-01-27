@@ -34,6 +34,7 @@ def feedback(request):
     fb = getFeedbackObj(request)
     responseDict = {}
     responseDict["ID"] = fb.id
+    responseDict["name"] = fb.name
     responseDict["Answers"] = json.loads(fb.jsonAnswers)
     #Form data 
     frm = Form.objects.filter(id=fb.form.id)[0]
