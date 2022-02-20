@@ -33,13 +33,17 @@
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
         <meta name="color-scheme" content="light dark">
-        <meta name="connect-src" http-equiv="Content-Security-Policy" content="default-src 'self' http://localhost:8001/ https://www.pochlebnik.eu/ https://cdn.jsdelivr.net/;script-src 'unsafe-eval' 'unsafe-inline' 'unsafe-hashes' https://cdn.jsdelivr.net/; script-src-elem 'self' 'unsafe-eval' https://cdn.jsdelivr.net/">
+        <meta name="connect-src" http-equiv="Content-Security-Policy" content="default-src 'self' http://localhost:8001/ https://www.pochlebnik.eu/ https://cdn.jsdelivr.net/ 'unsafe-inline' ;script-src 'unsafe-eval' 'unsafe-inline' 'unsafe-hashes' https://cdn.jsdelivr.net/; script-src-elem 'self' 'unsafe-eval' https://cdn.jsdelivr.net/">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <link rel="stylesheet" href="css/index.css">
         <title>DOFBC</title>
     </head>
     <body>
         <div id="hiddenTemplates" hidden>
+            <div id="fbBlockRowTemplate">
+                <div class="blockRow">
+                </div>
+            </div>
             <div id="fbBlockTemplate">
                 <div class="d-inline-block fbBlock" onclick="openFeedback('TempRep0')">
                     TempRep1
@@ -77,6 +81,31 @@
             <div id="fbStatusTemplate">
                 Status : TempRep0
             </div>
+            <div id="feedbackCompletedTemplate" class="text-center">
+                <h2>Toť vše. Díky!</h2>
+            </div>
+            <div id="RatingFeedbackTemplate">
+                <div id="AltStarTR" class="altStar" data-starnum="Progress">Progress/10</div>
+                <input id="StarRangeTR" onchange="fillButtons(parseInt(this.value))" type="range" value="Progress" min="1" max="10" step="1" orient="vertical">
+            </div>
+            <div id="VerbalFeedbackTemplate">
+                <div class="CommentBlock">
+                    <textarea id="DescriptionReplace" class="feedbackTextarea"></textarea>
+                </div>
+            </div>
+            <div id="FeedbackRatingAnswerTemplate">
+                <div class="answerRow"><h4>ToReplace</h4>: NumRep (AnswerCount odpovědí)<br></div> 
+            </div>
+            <div id="FeedbackVerbalAnswerTemplate">
+                <h4>QuestionName</h4>
+                <div class="textFeedbackField" id="Commentcmid" data-shownid="0">
+                    Content
+                </div>
+                <div class="nextBackBox">
+                    <button class="nextButton float-left" onclick="nearComment(Commentcmid,cmid,-1)"><=</button>
+                    <button class="nextButton float-left" onclick="nearComment(Commentcmid,cmid,1)">=></button>
+                </div>
+            </div>
         </div>
         <div class="app">
             <div class="overlay">
@@ -91,11 +120,33 @@
                             </div>
                         </div>
                     </div>
+                    <div id="fillFeedbackView" hidden>
+                        <div class="mt-5">
+                            <div id="feedbackName" class="h1 text-center"></div>
+                            <div class="answerBlock">
+                                <div id="ProgressRow" class="progressRow">
+                                    <div id="currentProgress" class="d-inline"></div><div class="d-inline">/5</div>
+                                </div>
+                                <div id="Questiontitle" class="questionTitle"></div>
+                                <div id="Questionblock"></div>
+                                <div id="PreviousColumn" class="bottomLine">
+                                    <button id="PreviousQuestionButton" onclick="moveQuestion(-1)" class="nextButton float-left" hidden><=</button>
+                                    <button id="SumbitQuestionButton" onclick="submitQuestion(NaN)" class="nextButton float-left">=></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div id="loginView" class="form-group" hidden>
                         <input id="loginnameLogin" placeholder="login" class="form-control">
                         <input id="passwordLogin" type="password" placeholder="heslo" class="form-control">    
                         <button id="loginBut" class="btn btn-success">
                             Přihlásit se
+                        </button>
+                    </div>
+                    <div id="chooseFeedbackView" hidden>
+                        <input id="feedbackAddress" placeholder="url" class="form-control">    
+                        <button id="feedbackBut" class="btn btn-success">
+                            Otevřít
                         </button>
                     </div>
                     <div id="homeView" hidden>
@@ -148,11 +199,26 @@
                             </div>
                             <div class="toplineWindow">
                                 <div id="0statusWindowFeedback" class="toplineWindowButton dispNoneMobile" onclick="switchToplineWindowBlock(this)">
-                                    Stav vyplnitelnosti
+                                    Stav
                                 </div>
                                 <div id="1statusWindowFeedback" hidden>
                                     <button class="closeButton" onclick="switchToplineWindowBlock(this.parentElement)">x</button><br>
                                     <div id="statusStateFeedback" class="oneRow pushLeft">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="answerList" class="toplineWindow">
+                                <div id="0fbreportWindowFeedback" class="toplineWindowButton dispNoneMobile" onclick="switchToplineWindowBlock(this)">
+                                    Zobrazit odpovědi
+                                </div>
+                                <div id="1fbreportWindowFeedback" class="middlePageFixed" hidden>
+                                    <button class="closeButton" onclick="switchToplineWindowBlock(this.parentElement)">x</button><br>
+                                    <div id="ratingPlaceFeedback">
+                                    </div>
+                                    <div id="verbalPlaceFeedback">
+                                    </div>
+                                    <div id="graphPlaceFeedback">
+                                        <canvas id="FeedbackHistoryGraph" width="1000" height="500" aria-label="History of feedbacks" role="img"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -166,6 +232,8 @@
         </div>
         <script src="cordova.js"></script>
         <script src="js/index.js"></script>
+        <script src="js/feedback.js"></script>
+        <script src="js/chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     </body>
 </html>

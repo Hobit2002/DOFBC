@@ -21,6 +21,7 @@ class Feedback(models.Model):
     status = models.CharField(max_length=1,choices=statusChoices,default='W')
     form = models.ForeignKey(Form,models.CASCADE,null=True,default=None)
     jsonAnswers = models.TextField(max_length=1000,default="{}")
+    submissionDate = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return super().__str__() + ":FB:" + self.name

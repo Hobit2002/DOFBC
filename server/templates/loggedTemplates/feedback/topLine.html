@@ -17,7 +17,7 @@
             </div>
             <div>
                 <label for="gFormsFeedback">{{switchFormHTML}}:</label>
-                <select id="gFormsFeedback" onchange="userRequest('feedbackUpdate',{'ID':feedbackObjId.value,'value':this.value,'parameter':'form'})">
+                <select id="gFormsFeedback" onchange="userRequest('feedbackUpdate',{'ID':feedbackObjId.value,'value':this.value,'parameter':'form'});window.location=window.location">
                     <option value=""></option>
                     {% for gForm in gForms %}
                         <option value="{{gForm.id}}">{{gForm.name}}</option>
@@ -33,6 +33,7 @@
         <div id="1QRWindowFeedback" class="middlePageFixed" hidden>
             <button class="closeButton goUp" onclick="switchToplineWindowBlock(this.parentElement)">{{CloseHTML}}</button>
             <img src="{% static '' %}{{QRurl}}" class="centerImage">
+            <div><br>{{FeedbackFillURLHTML}}:{{fillUrl}}</div>
         </div>
     </div>
     <div class="toplineWindow">
@@ -46,5 +47,22 @@
             </div>
         </div>
     </div>
+    {% if alreadyFilled %}
+    <div class="toplineWindow">
+        <div id="0fbreportWindowFeedback" class="toplineWindowButton dispNoneMobile" onclick="switchToplineWindowBlock(this);drawAnswers()">
+            {{fbreportWindowHTML}}
+        </div>
+        <div id="1fbreportWindowFeedback" class="middlePageFixed" hidden>
+            <button class="closeButton" onclick="switchToplineWindowBlock(this.parentElement)">{{CloseHTML}}</button><br>
+            <div id="ratingPlaceFeedback">
+            </div>
+            <div id="verbalPlaceFeedback">
+            </div>
+            <div id="graphPlaceFeedback">
+                <canvas id="FeedbackHistoryGraph" width="1000" height="500" aria-label="History of feedbacks" role="img"></canvas>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
 </div>

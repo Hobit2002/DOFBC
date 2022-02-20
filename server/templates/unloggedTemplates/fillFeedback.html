@@ -1,0 +1,20 @@
+{% load static %}
+<div class="mt-5">
+    <div class="h1 text-center">{{fb.name}}</div>
+    <div class="answerBlock">
+        <div id="ProgressRow" class="progressRow">
+            <div id="currentProgress" class="d-inline"></div><div class="d-inline">/5</div>
+        </div>
+        <div id="Questiontitle" class="questionTitle"></div>
+        <div id="Questionblock"></div>
+        <div id="PreviousColumn" class="bottomLine">
+            <button id="PreviousQuestionButton" onclick="moveQuestion(-1)" class="nextButton float-left" hidden><=</button>
+            <button id="SumbitQuestionButton" onclick="submitQuestion(NaN)" class="nextButton float-left">=></button>
+        </div>
+    </div>
+</div>
+<script>
+    var fbID = "{{fb.id}}"
+    var fbData = {{questions|safe}}
+</script>
+<script src="{% static 'js/feedback.js' %}"></script>

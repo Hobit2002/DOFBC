@@ -35,6 +35,10 @@ body {
     width:100%;
 }
 
+h4 {
+    font-size: calc(1rem + .3vw);
+}
+
 /* Portrait layout (default) */
 .app {
     position:absolute;             /* position in the center of the screen */
@@ -160,7 +164,10 @@ h1 {
 .middlePageFixed{
     position: fixed;
     top:15vh;
-    left: 0;
+    left: 0vw;
+    width: 100vw;
+    max-height: 80vh;
+    overflow-y: auto;
     padding: 1em;
     background-color: rgb(36, 59, 31);
 }
@@ -276,7 +283,7 @@ h1 {
 
 .fbBlock{
     min-height: 15vh;
-    width: 9vw;
+    width: 25vw;
     margin:0.5em;
     padding: 5px;
     background-color: rgb(21, 145, 77);
@@ -350,6 +357,85 @@ h1 {
     height: 10vh;
     font-size: 2em;
  }
+ 
+/*Feedback styles*/
+.answerBlock{
+    margin-right: 13em;
+    margin-left:40vw;
+    height: 20em;
+}
+
+.bottomLine{
+    margin-top: 6em;
+    width: 100vw;
+    margin-left: -40vw;
+    text-align: center;
+}
+
+.feedbackTextarea{
+    resize: none;
+    width: 20em;
+    height: 8em;
+    background-color: rgb(107, 184, 125);
+    margin: 0.5em;
+    margin-left: -15vw;
+}
+
+.progressRow,.questionTitle{
+    width: 20vw;
+    text-align: center;
+}
+
+.questionTitle{
+    font-size: 1.9em;
+    font-weight: bold;
+}
+
+.progressRow{
+    font-size: 3em;
+}
+
+.starblock{
+    width: 6em;
+    margin-top: 1em;
+    background: rgb(217, 230, 172);
+    border: hidden;
+    margin-left: -1em;
+}
+.stardiv{
+    height:7vh;
+}
+
+.starrow{
+    margin-left: -6vw;
+}
+
+/*Display answers*/
+.answerRow{
+    margin-bottom: 1vh;
+}
+
+.answerRow>h4{
+    display: inline;
+    color: rgb(129 177 123);
+}
+
+.nextBackBox{
+    height: 4em;
+    padding-right: 2.5em;
+}
+
+.textFeedbackField{
+    background-color: rgba(70,100,60,0.9);
+    width: 20em;
+    height: 5em;
+    padding-left: 1em;
+    padding-top:0.5em;
+    color: rgb(200,200,200);
+    border: 1px solid black;
+    overflow-y: scroll;
+    margin-left: 4em;
+}
 
 /* mobile only */
 .rowListParentMobile{
@@ -359,4 +445,76 @@ h1 {
 
 .dispNoneMobile{
     display: none;
+}
+
+input[type=range] {
+    -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+    width: 13em; /* Specific width is required for Firefox. */
+    background: transparent; /* Otherwise white in Chrome */
+    height: 1.9em;
+    cursor: pointer;
+    transform: rotate(-90deg);
+    margin-left: -3em;
+    margin-top: 5.5em;
+  }
+  
+  input[type=range]:focus{
+    border:none;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    margin-top: -0.15em;
+    width: 2.2em;
+    height: 2.2em;
+    background: #81ff7b;
+    border: 1.6px solid #2d5e1a;
+    border-radius: 11px;
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+  
+  input[type=range]::-moz-range-thumb{
+    width: 2.2em;
+    height: 2.2em;
+    background: #81ff7b;
+    border: 1.6px solid #2d5e1a;
+    border-radius: 11px;
+    cursor: pointer;
+  }
+
+  input[type=range]::-webkit-slider-runnable-track {
+    height: 1.9em;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    background: #4d7241;
+    border-radius: 1.3px;
+    border: 0.2px solid #010101;
+  }
+  
+  input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #74aa62;
+  }
+  
+  input[type=range]::-moz-range-track {
+    height: 1.9em;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    background: #4d7241;  
+    border-radius: 1.3px;
+    border: 0.2px solid #010101;
+  }
+
+  .altStar{
+    font-size: large;
+    text-align: center;
+    padding-top: 7.5vh;
+    font-weight: bolder;
+    padding-right: 0.3em;
+    background-image:url('filledstar.png');
+    height: 5em;
+    width:5em;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
 }

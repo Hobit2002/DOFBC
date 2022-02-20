@@ -9,5 +9,8 @@ urlpatterns = [
     path('feedback',miViews.feedback),
     path('feedbackUpdate',uiViews.feedbackUpdate),
     path('deleteObject',uiViews.deleteObject),
-    path('changeStatus',uiViews.changeStatus)
+    path('changeStatus',uiViews.changeStatus),
+    path('fillFeedback',uiViews.fillFeedback),
+    path('submitFeedback',uiViews.submitFeedback),
+    path('graphData',uiViews.graphData)
 ]

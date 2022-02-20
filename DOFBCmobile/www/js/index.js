@@ -35,10 +35,13 @@ let CSRFToken
 let server = "https://www.pochlebnik.eu"
 let urlBase = server+"/mi/"
 let staticUrl = server+ "/static/"
+let fbResponse
+let fbData
 let response = ""
 let view = "crossroad"
 let fbStatus = 0
 let fbStatusList = ['W','A','C']
+let authToken
 let JSDict = {
     "WFBStatus":"Připravovaná",
     "AFBStatus":"Otevřená",
@@ -49,9 +52,14 @@ let JSDict = {
     "-1nextButton":"<=",
     "FormNameHTML":"<i>Název formuláře</i>"
 }
+let answers
 
 //react to user actions
+fillBut.addEventListener('click',function(){render('chooseFeedback')},false);
+
 editBut.addEventListener('click',login,false);
+
+feedbackBut.addEventListener('click',fillFeedback,false)
 
 loginBut.addEventListener('click',function(){
     window.localStorage.setItem("loginname",loginnameLogin.value)
@@ -91,6 +99,7 @@ async function useForm(){
 function drawFeedback(){
     render('feedback')
     fbData = JSON.parse(response)
+    answers = fbData["answerObj"]
     feedbackObjId.value = fbData.ID
     if(fbData.name=="" || fbData.name==undefined){
         fbData.name = JSDict["FormNameHTML"]
@@ -113,21 +122,39 @@ function drawFeedback(){
         var html = rowList.innerHTML
         var queIndx = 0
         Array.from(fbData.Questions[queType]).forEach(function(question){
-            console.log(question)
             html += loadTemplate("fbRow",queIndx,question,queType)
             queIndx+=1
         })
         rowList.innerHTML = html
     })
+    //draw answers
+    if(fbData["alreadyFilled"]){
+        drawAnswers()
+    }
+    else{
+        answerList.hidden = true
+    }  
+}
+
+async function fillFeedback(){
+    var url = feedbackAddress.value+"&MI=1"
+    await request(url,{},'GET',false)
+    fbResponse = JSON.parse(response)
+    fbData = fbResponse["questions"]
+    feedbackName.innerHTML = fbResponse["fb"]["name"]
+    render('fillFeedback')
+    moveQuestion()
 }
 
 async function home(){
     render("home")
     await request("home")
     feedbacks = JSON.parse(response)
+    var tok = 0
     Array.from(feedbacks).forEach(function(fb){
-        
-        homeFBSpace.innerHTML += loadTemplate("fbBlock",fb["id"],fb["name"])
+        if(!(tok%3)){homeFBSpace.innerHTML+=loadTemplate("fbBlockRow")}
+        homeFBSpace.children[homeFBSpace.children.length -1].innerHTML += loadTemplate("fbBlock",fb["id"],fb["name"])
+        tok+=1
     })
     
 }
@@ -143,7 +170,8 @@ async function login(){
     //send request
     await request("checkAuth",{"loginname":loginname,"password":password},"POST")
     //render the screen accordingly
-    if(response[0]==="T"){
+    if(response.length){
+        authToken = response
         home()
     }
     else{
@@ -172,7 +200,7 @@ async function commitChanges(site,object){
 }
 
 function loadTemplate(className,...values){
-    html = document.getElementById(className+"Template").innerHTML
+    var html = document.getElementById(className+"Template").innerHTML
     loopIndex = 0
     values.forEach(function(item){
         var regularExpr = new RegExp("TempRep"+loopIndex, 'g')
@@ -194,11 +222,11 @@ function render(newview){
     view = newview
 }
 
-function request(url,paramObject={},method="GET"){
+function request(url,paramObject={},method="GET",addBase = true){
     //write url
-    console.log("Sending request")
     let reqPromise = new Promise(async function(resolve){
-        url = urlBase + url
+        paramObject["authToken"] = authToken
+        url = addBase ? urlBase + url : url
         var request = new XMLHttpRequest()
         let name
         var urlEncodedDataPairsStr = ""
@@ -283,4 +311,144 @@ function switchToplineWindowBlock(element){
     var newId = newPrefix+element.id.slice(1)
     element.hidden = true
     document.getElementById(newId).hidden=false
+}
+
+async function drawAnswers(){
+    ratingPlaceFeedback.innerHTML = ""
+    //rating questions
+    answers["Rating"].forEach(question => {
+        //calculate average
+        var count = 0
+        var average = 0
+        question["Answers"].forEach(rating =>{
+            count+=1
+            average+=parseInt(rating)
+        })
+        average = Math.round(100*average/count)/100
+        //insert new fedback line
+        ratingPlaceFeedback.innerHTML+= FeedbackRatingAnswerTemplate.innerHTML.replace(/ToReplace/g, question["Name"]).replace(/NumRep/g, String(average)).replace(/undefined/g, " ??? )-:").replace(/NaN/g, " ??? )-:").replace(/AnswerCount/g, count)    
+    });
+    //verbal questions
+    var cmid = 0
+    answers["Verbal"].forEach(question => {
+        ratingPlaceFeedback.innerHTML+= FeedbackVerbalAnswerTemplate.innerHTML.replace(/cmid/g,cmid).replace(/QuestionName/g,question["Name"]).replace(/Content/g,question["Answers"][0])
+        cmid+=1
+    })
+    //create graph
+    await request("graphData",{"ID":feedbackObjId.value})
+    var graphData = JSON.parse(response)
+    createGraph(graphData)
+}
+
+function nearComment(textbox,questionIndex,direction){
+    var questionAns = answers["Verbal"][questionIndex]["Answers"]
+    var curState = parseInt(textbox.dataset.shownid)
+    var nextState = curState + direction
+    var qaLen = questionAns.length
+    nextState = nextState >= 0 ? nextState < qaLen ? nextState : 0 : qaLen + direction
+    textbox.innerHTML = questionAns[nextState]
+    textbox.dataset.shownid = nextState
+}
+
+//chart drawing
+var RankingGraph = 0
+var Backshift = 0
+var tooltipdata=[]
+var labels=[]
+var configuration={}
+var canv =""
+var datasets = []
+var datasettemp = { 
+    label:")-:",
+    backgroundColor:"green",
+    borderColor:"green",
+    fill:false,
+    data:[]}
+
+var colourarr = ["green","mediumseagreen","seagreen","olive","darkgoldenrod","olivedrab","yellowgreen","springgreen","palegreen","mediumaquamarine"]
+
+function createGraph(graphData){
+    //Initialize graph variables
+    RankingGraph = 0
+    Backshift = 0
+    data = []
+    tooltipdata=[]
+    labels=[]
+    configuration={}
+    datasets = []
+    canv = FeedbackHistoryGraph.getContext("2d")
+    var greatest = new Date(1989,1,1)
+    var smallest = new Date(3000,1,1)
+    //loop ranked parameters
+    var d = 0
+    Object.entries(graphData).forEach(feedbackData=>{
+        if(feedbackData[1].length -1){
+            var feedbackName = feedbackData[0]
+            datasets.push({
+                label : feedbackName,
+                borderColor : colourarr[d],
+                data:[]
+            })
+            d += 1
+            //loop answers
+            feedbackData[1].forEach(answer=>{
+                //get rating
+                var rating = answer["Rating"]
+                //get dates 
+                var releaseTime = new Date(answer["Date"])
+                if(releaseTime>greatest){greatest=releaseTime}
+                if(releaseTime<smallest){smallest=releaseTime}
+                var pushRelease = String(releaseTime.getDate())+". "+String(releaseTime.getMonth()+1)+". "+String(releaseTime.getFullYear())
+                //push answer data to appropriate structures
+                datasets[datasets.length-1]["data"].push({x:pushRelease,y:rating})
+                tooltipdata.push({"Name":answer["Name"],"Label":feedbackName})
+            })
+        }
+    })
+    //prepare labels
+    if(datasets.length){
+        var base = smallest
+        while(base<greatest){
+            base.setDate(base.getDate() + 1)
+            labels.push(String(base.getDate())+". "+String(base.getMonth()+1)+". "+String(base.getFullYear()))
+        }
+        //prepare configuration 
+        configuration = {
+            type:'line',
+            data:{
+                labels:labels,
+                datasets:datasets
+            },
+            options:{
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            max: 10,
+                            min: 0,
+                            stepSize: 1
+                        }
+                    }]
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                tooltips:{
+                    mode: 'index',
+                    callbacks: {
+                        title: (tooltipItems) => {
+                            return tooltipdata[tooltipItems[0].index]["Name"]
+                        },
+                        label:(tooltipItem)=>{
+                            return configuration.data.datasets[tooltipItem.datasetIndex].label
+                        }
+                    }
+                },
+            }
+        }
+        //draw graph
+        RankingGraph = new Chart(canv,configuration)
+        FeedbackHistoryGraph.style.height = "30vh"
+    }
+    else{
+        graphPlaceFeedback.hidden = true
+    }
 }

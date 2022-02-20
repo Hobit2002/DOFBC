@@ -59,7 +59,11 @@
     top:15vh;
     left:27vw;
     padding: 1em;
-    background-color: rgb(36, 59, 31);
+    background-color: rgb(50 80 44);
+    min-width: 40vw;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 2px solid black;
 }
 
 .centerImage{
@@ -225,4 +229,80 @@
     font-weight:bold;
     background-color: rgb(43, 61, 40);
     color: rgb(212, 236, 192);
+}
+
+/*Feedback styles*/
+
+.answerBlock{
+    margin-right: 13em;
+    margin-left:40vw;
+    height: 20em;
+}
+
+.bottomLine{
+    margin-top:3em;
+}
+
+.feedbackTextarea{
+    resize: none;
+    width: 20em;
+    height: 8em;
+    background-color: rgb(107, 184, 125);
+    margin: 0.5em;
+    margin-left: 4vw;
+}
+
+.progressRow,.questionTitle,.bottomLine{
+    width: 20vw;
+    text-align: center;
+}
+
+.questionTitle{
+    font-size: 1.9em;
+    font-weight: bold;
+}
+
+.progressRow{
+    font-size: 3em;
+}
+
+.starblock{
+    width: 6em;
+    margin-top: 1em;
+    background: rgb(217, 230, 172);
+    border: hidden;
+    margin-left: -1em;
+}
+.stardiv{
+    height:7vh;
+}
+
+.starrow{
+    margin-left: -6vw;
+}
+
+/*Display answers*/
+.answerRow{
+    margin-bottom: 1vh;
+}
+
+.answerRow>h4{
+    display: inline;
+    color: rgb(129 177 123);
+}
+
+.nextBackBox{
+    height: 4em;
+    padding-left: 2.5em;
+}
+
+.textFeedbackField{
+    background-color: rgba(70,100,60,0.9);
+    width: 20em;
+    height: 5em;
+    padding-left: 1em;
+    padding-top:0.5em;
+    color: rgb(200,200,200);
+    border: 1px solid black;
+    overflow-y: scroll;
 }

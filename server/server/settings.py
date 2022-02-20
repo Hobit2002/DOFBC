@@ -85,8 +85,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'HOST':'127.0.0.1',
         'PORT':'3307',
-        'NAME':'DOFBC',
         'USER':'DOFBC_pochlebnik',
+        'NAME':'DOFBC',
         'PASSWORD':'piW2WePuYiQOHawijOvav6huxof1qE'
     }
 }

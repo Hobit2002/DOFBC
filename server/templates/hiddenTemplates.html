@@ -1,3 +1,4 @@
+{% load static %}
 <div id="questionFeedbackTemplate">
     <div class="fbRow">
         <div id="questionQuetypeLoocounterFeedback" class="QuetypeQuestion" onclick="edittextContent(this,'feedback')">
@@ -7,4 +8,40 @@
             {{DeleteHTML}}
         </button>
     </div>  
+</div>
+<div id="filledStarTemplate">
+    <img src="{% static 'stars/filled.png' %}"  class="stardiv">
+</div>
+<div id="blankStarTemplate">
+    <img src="{% static 'stars/blank.png' %}"  class="stardiv">
+</div>
+<div id="RatingFeedbackTemplate">
+    <div class="starrow">
+        {% for i in '0123456789' %}
+            <button id="Star{{i}}TR" onmouseover="fillButtons({{i}})" onclick="submitQuestion('{{i}}')" class="starblockTR" data-overed="false">
+                <img src="{% static 'stars/blank.png' %}"  class="stardiv">
+            </button>
+        {% endfor %}
+    </div>
+</div>
+<div id="VerbalFeedbackTemplate">
+    <div class="CommentBlock">
+        <textarea id="DescriptionReplace" class="feedbackTextarea"></textarea>
+    </div>
+</div>
+<div id="FeedbackCompletedTemplate">
+    <h2>{{FeedbackCompletedHTML}}</h2>
+</div>
+<div id="FeedbackRatingAnswerTemplate">
+    <div class="answerRow"><h4>ToReplace</h4>: NumRep (AnswerCount {{AnswersHTML}})<br></div> 
+</div>
+<div id="FeedbackVerbalAnswerTemplate">
+    <h4>QuestionName</h4>
+    <div class="textFeedbackField" id="Commentcmid" data-shownid="0">
+        Content
+    </div>
+    <div class="nextBackBox">
+        <button class="nextButton float-left" onclick="nearComment(Commentcmid,cmid,-1)"><=</button>
+        <button class="nextButton float-left" onclick="nearComment(Commentcmid,cmid,1)">=></button>
+    </div>
 </div>

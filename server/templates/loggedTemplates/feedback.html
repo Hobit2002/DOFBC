@@ -1,13 +1,17 @@
 {% extends 'loggedinTemplate.html' %}
 {% block content %}
+    {% if alreadyFilled %}
+        <input type="hidden" id="answerObj" value="{{answerObj|safe}}">
+        <textarea id="graphJsonSpace" hidden></textarea>
+    {% endif %}
     <input type="hidden" id="feedbackObjId" value="{{Feedback.id}}">
     <div class="centerTitle" id="nameFeedback" onclick="edittextContent(this,'feedback')">
-        {% if Feedback.name %}
+        {% if HasName %}
             {{Feedback.name}}
         {% else %}
-            <i>{{NoNameYetHTML}}</i>
+            {{NoNameYetHTML}}
         {% endif %}
-        <button onclick="userRequest('deleteObject',{'type':'feedback','ID':feedbackObjId.value,'redirect':historyList[historyList.length-2]})" content-editable="false" class="deleteButton">
+        <button onclick="userRequest('deleteObject',{'type':'feedback','ID':feedbackObjId.value,'redirect':historyList.length ? historyList[historyList.length-2]:'/ui/home'})" content-editable="false" class="deleteButton">
             {{DeleteHTML}}
         </button>
     </div>
