@@ -17,13 +17,27 @@
  * under the License.
  */
 
+//const { prepare } = require("cordova");
+
 // Wait for the deviceready event before using any of Cordova's device APIs.
 // See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
 document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
-    // Cordova is now initialized. Have fun!
-    console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
+    //set data backups
+    var dataBackupStr = localStorage.getItem("dataBackup")
+    if(dataBackupStr == undefined){
+        dataBackup = {}
+        updateDataBackup()
+    }
+    else{dataBackup = JSON.parse(dataBackupStr)}
+    //load to-send List
+    var toSendStr = localStorage.getItem("toSend")
+    if(toSendStr == undefined){
+        toSend = []
+        updateToSend()
+    }
+    else{toSend=JSON.parse(toSendStr)}
 }
 
 //  ********************************************************************************* 
@@ -32,8 +46,8 @@ function onDeviceReady() {
 
 //global variables
 let CSRFToken
-let server = "https://www.pochlebnik.eu"
-let urlBase = server+"/mi/"
+let server = "https://www.pochlebnik.eu"//"http://localhost:8001"
+let hotspot = "http://192.168.43.1:625974"
 let staticUrl = server+ "/static/"
 let fbResponse
 let fbData
@@ -50,9 +64,14 @@ let JSDict = {
     "VerbalQuestionsHTML":"Otázky s otevřenou odpovědí",
     "1nextButton":"=>",
     "-1nextButton":"<=",
-    "FormNameHTML":"<i>Název formuláře</i>"
+    "FormNameHTML":"Název formuláře",
+    "OfflineMissingData":"V offline režimu bohužel nejsou dostupná potřebná data",
+    "OfflineUnupdateable":"V offline režimu neaktualizovatelné",
+    "ScanError":"Skenování bylo přerušeno, zkuste to znovu, nebo zadejte url adresy"
 }
 let answers
+let dataBackup
+let toSend
 
 //react to user actions
 fillBut.addEventListener('click',function(){render('chooseFeedback')},false);
@@ -60,6 +79,8 @@ fillBut.addEventListener('click',function(){render('chooseFeedback')},false);
 editBut.addEventListener('click',login,false);
 
 feedbackBut.addEventListener('click',fillFeedback,false)
+
+feedbackScanQRCode.addEventListener('click',scanQRCode,false)
 
 loginBut.addEventListener('click',function(){
     window.localStorage.setItem("loginname",loginnameLogin.value)
@@ -69,7 +90,7 @@ loginBut.addEventListener('click',function(){
 
 newFeedbackHomeBut.addEventListener('click',async function(){
     render("feedback")
-    await request("newFeedback",{"MI":1})
+    await activeRequest("newFeedback",{"MI":1})
     drawFeedback()
 })
 
@@ -80,14 +101,18 @@ async function changeStatus(dir){
 }
 
 async function deleteObject(){
-    await request('deleteObject',{'type':'feedback','ID':feedbackObjId.value})
+    await activeRequest('deleteObject',{'type':'feedback','ID':feedbackObjId.value})
     home()
 }
 
 async function openFeedback(fbid){
     render("feedback")
-    await request("feedback",{"ID":fbid})
-    drawFeedback()
+    try{
+        await jsonRequest("feedback",{"ID":fbid})
+        drawFeedback()
+    }
+    catch{return}
+    
 }
 
 async function useForm(){
@@ -133,6 +158,10 @@ function drawFeedback(){
     }
     else{
         answerList.hidden = true
+    }
+    //if the feedback is active and you are offline, start the server
+    if(fbData.Status == "A" && navigator.connection.type!="NONE"){
+        startSocketServer()
     }  
 }
 
@@ -148,7 +177,7 @@ async function fillFeedback(){
 
 async function home(){
     render("home")
-    await request("home")
+    await jsonRequest("home")
     feedbacks = JSON.parse(response)
     var tok = 0
     Array.from(feedbacks).forEach(function(fb){
@@ -168,16 +197,30 @@ async function login(){
         return
     }
     //send request
-    await request("checkAuth",{"loginname":loginname,"password":password},"POST")
+    if(navigator.connection.type == "NONE"){
+        response = " "
+    }
+    else{
+        await request("checkAuth",{"loginname":loginname,"password":password},"POST")
+    }
     //render the screen accordingly
     if(response.length){
         authToken = response
+        //deal with toSend
+        if(toSend.length){
+            toSend.forEach(async function(reqData){
+                await request(reqData["url"],reqData["paramObject"],reqData["method"],reqData["addBase"])
+            }
+            )
+            toSend = []
+            updateToSend()
+        }
+        //move to home page
         home()
     }
     else{
         render("login")
     }
-
 }
 
 function renderFBStatus(status){
@@ -191,12 +234,205 @@ function renderFBStatus(status){
     }
     statusStateFeedback.innerHTML = statusHTML
 }
+
+function scanQRCode(){
+    errorBlock.innerText+="Button pressed\n"
+    try{
+        cordova.plugins.barcodeScanner.scan(success,error,{
+            showTorchButton: true,
+            prompt: "Scan your code",
+            formats: "QR_CODE",
+            resultDisplayDuration: 0
+        })
+        function success(result){
+            if(!result.cancelled){
+                feedbackAddress.value = result.text
+                fillFeedback()
+            }
+            else{
+                alert(JSDict["ScanError"])
+            }
+        }
+        function error(err){
+            console.log(err)
+        }
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+function startSocketServer(){
+    var wsserver = cordova.plugins.wsserver;
+    wsserver.start(625974, {
+        // WebSocket Server handlers
+        'onFailure' :  function(addr, port, reason) {
+            console.log('Stopped listening on %s:%d. Reason: %s', addr, port, reason);
+            wsserver.stop()
+        },
+        // WebSocket Connection handlers
+        'onOpen' : function(conn) {
+            wsserver.send({"uuid":conn.uuid},prepareQuestions(conn.resource));
+        },
+        'onMessage' : function(conn, msg) {
+            saveQuestions()
+        },
+        'onClose' : function(conn, code, reason, wasClean) {
+            console.log('A user disconnected from %s', conn.remoteAddr);
+        },
+        // Other options
+        'origins' : [ 'file://' ], // validates the 'Origin' HTTP Header.
+        'protocols' : [ 'my-protocol-v1', 'my-protocol-v2' ], // validates the 'Sec-WebSocket-Protocol' HTTP Header.
+        'tcpNoDelay' : true // disables Nagle's algorithm.
+    }, function onStart(addr, port) {
+        console.log('Listening on %s:%d', addr, port);
+    }, function onDidNotStart(reason) {
+        console.log('Did not start. Reason: %s', reason);
+    });    
+}
+
 //support functions
+async function activeRequest(url,paramObject={},method="GET",addBase = true){
+    //if not connected to internet save data to to-send list
+    if(navigator.connection.type == "NONE"){
+        //save to toSend
+        toSend.push({"url":url,"paramObject":paramObject,"method":method,"addBase":addBase})
+        updateToSend()
+        //save appropriate data
+        switch (url) {
+            case 'changeStatus':
+                var fbKey = "feedback" + generateEncDataPairs({"ID":paramObject["ID"]},true)
+                var fb = JSON.parse(dataBackup[fbKey])
+                //change status
+                var statusList = ["W","A","C"]
+                var newStatus = statusList[statusList.indexOf(fb.Status)+parseInt(paramObject["dir"])]
+                fb.Status = newStatus
+                if (newStatus=="A"){
+                    activateFeedback(fb)
+                }
+                dataBackup[fbKey] = JSON.stringify(fb)
+                break    
+            case 'deleteObject':
+                //delete feedback link from home json
+                var feedbackList = JSON.parse(dataBackup["home"])
+                dataBackup["home"] = JSON.stringify(feedbackList.filter(fb => fb.id != paramObject.ID))
+                //delete feedback dataBackup
+                var fbKey = "feedback" + generateEncDataPairs({"ID":paramObject["ID"]},true)
+                delete dataBackup[fbKey] 
+                break
+            case 'feedbackUpdate':
+                var fbKey = "feedback" + generateEncDataPairs({"ID":paramObject["ID"]},true)
+                var fb = JSON.parse(dataBackup[fbKey])
+                var newVal = paramObject["value"]
+                var parameter = paramObject["parameter"]
+                if(parameter=='name'){
+                    fb.name = newVal
+                    //update feedback list
+                    var feedbackList = JSON.parse(dataBackup["home"])
+                    for(i=0;i<feedbackList.length;i++){
+                        var fbHomeRep = feedbackList[i]
+                        if(fbHomeRep.id == paramObject["ID"]){
+                            fbHomeRep.name = newVal
+                        }
+                    }
+                    dataBackup["home"] = JSON.stringify(feedbackList)
+                }
+                else if(parameter.slice(0,8)=="question"){
+                    var queType = parameter.slice(8,14)
+                    var index = parseInt(parameter.slice(14))
+                    if(newVal.length){
+                        try{
+                            fb.Questions[queType][index] = newVal
+                        }
+                        catch{
+                            fb.Questions[queType].push(newVal)
+                        }
+                    }
+                    else{
+                        fb.Questions[queType].splice(index)
+                    }
+                }
+                else{
+                    window.alert(JSDict["OfflineUnupdateable"])
+                    break
+                }
+                dataBackup[fbKey] = JSON.stringify(fb)
+                break
+            case 'newFeedback':
+                //generate feedback id
+                var uuid = uuidv4()
+                paramObject["uuid"] = uuid
+                //generate default fb data
+                var newFb = {"ID":uuid,
+                    "name":"",
+                    "Answers":{},
+                    "Questions":{"Verbal":[],"Rating":[]},
+                    "Status":"W",
+                    "gForms":[],
+                    "alreadyFilled":false,
+                    "answerObj":{}
+                }
+                fbKey = "feedback" + generateEncDataPairs({"ID":uuid})
+                var fbData = JSON.stringify(newFb)
+                dataBackup[fbKey] = fbData
+                response = fbData
+                //add to home
+                var feedbackList = JSON.parse(dataBackup["home"])
+                feedbackList.push({"name":"","id":uuid})
+                dataBackup["home"] = JSON.stringify(feedbackList)
+                break  
+        }
+        updateDataBackup()
+    }
+    //else get data from server and update backups
+    else{
+        await request(url,paramObject,method,addBase)
+    }
+}
+
 async function commitChanges(site,object){
     address = site +"Update"
     parameter = object.id.slice(0,-1*(site.length))
     objId = document.getElementById(site+"ObjId").value
-    await request(address,{"ID":objId,"parameter":parameter,"value":object.firstChild.nodeValue})
+    await activeRequest(address,{"ID":objId,"parameter":parameter,"value":object.firstChild.nodeValue})
+}
+
+function generateEncDataPairs(paramObject,delAuthToken = false){
+    let name
+    var urlEncodedDataPairsStr = ""
+    if(delAuthToken){
+        delete paramObject["authToken"]
+    }
+    for(name in paramObject) {
+        urlEncodedDataPairsStr+=encodeURIComponent(name)+'='+encodeURIComponent(paramObject[name])+"&"
+    }
+    return urlEncodedDataPairsStr
+}
+
+async function jsonRequest(url,paramObject={},method="GET",addBase = true){
+    //if not connected to internet use dataBackup
+    if(navigator.connection.type == "NONE"){
+        var dbKey = url + generateEncDataPairs(paramObject,true)
+        console.log(dbKey)
+        if(Object.keys(dataBackup).includes(dbKey)){
+            response = dataBackup[dbKey]
+        }
+        else{
+            window.alert(JSDict["OfflineMissingData"])
+            throw "Insufficient data error"
+        }
+    }
+    //else get data from server and update backups
+    else{
+        await request(url,paramObject,method,addBase)
+        if(url=="feedback"){
+            dataBackup[url+generateEncDataPairs(paramObject,true)] = response
+        }
+        else{
+            dataBackup[url] = response
+        }
+        updateDataBackup()
+    }
 }
 
 function loadTemplate(className,...values){
@@ -226,13 +462,9 @@ function request(url,paramObject={},method="GET",addBase = true){
     //write url
     let reqPromise = new Promise(async function(resolve){
         paramObject["authToken"] = authToken
-        url = addBase ? urlBase + url : url
+        url = addBase ? urlBase() + url : url
         var request = new XMLHttpRequest()
-        let name
-        var urlEncodedDataPairsStr = ""
-        for(name in paramObject) {
-            urlEncodedDataPairsStr+=encodeURIComponent(name)+'='+encodeURIComponent(paramObject[name])+"&"
-        }
+        var urlEncodedDataPairsStr = generateEncDataPairs(paramObject)
         //prepare response recieving
         response = false
         request.onreadystatechange = function() {
@@ -255,6 +487,108 @@ function request(url,paramObject={},method="GET",addBase = true){
         request.send(urlEncodedDataPairsStr.slice(0,-1))
     })
     return reqPromise
+}
+
+function shuffle(array) {
+    let currentIndex = array.length,  randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (currentIndex != 0) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
+}
+  
+function updateDataBackup(){
+    localStorage.setItem("dataBackup",JSON.stringify(dataBackup))
+}
+
+function updateToSend(){
+    localStorage.setItem("toSend",JSON.stringify(toSend)) 
+}
+
+function urlBase(){
+    var target = navigator.connection.type != "NONE" ? server : hotspot
+    return target +"/mi/"
+}
+
+function uuidv4() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+}
+
+//from server
+function activateFeedback(fb){
+    var questions = JSON.parse(fb.Questions)
+    var answers = JSON.parse(fb.Answers)
+    //delete deleted questions from form
+    var refAns = JSON.parse(JSON.stringify(answers))
+    Object.entries(refAns).forEach(([qName,qDict]) => {
+        var qType = qDict["Type"]
+        if(questions[qType].includes(qName)){
+            delete questions[qType][questions[qType].indexOf(qName)]
+        }
+        else{
+            delete answers[qName]
+        }
+    })
+    //copy new questions to answers
+    Object.entries(questions).forEach(([qType,typeList]) => {
+        typeList.forEach(q=>{
+            answers[q] = {"Type":qType,"Answers":[]}
+        })
+
+    })
+    //shuffle
+    var keys = shuffle(Object.keys(answers))
+    var newObj = {}
+    keys.forEach(key=>{
+        newObj[key] = answers[key]
+    })
+    //save
+    fb.Answers = JSON.stringify(newObj) 
+}
+
+function prepareQuestions(resource){
+    //load feedback data and get feedback state
+    var url = URL(server+resource)
+    var fbKey = "feedback" + generateEncDataPairs({"ID":url.searchParams.get('ID')},true)
+    var fb = JSON.parse(dataBackup[fbKey])
+    if(fb.Status!="A"){
+        return "BadFeedbackState"
+    }
+    //find five with least rating count
+    var sortable = []
+    for(var answer in fb.Answers){
+        sortable.push([answer,fb.Answers[answer]])
+    }
+    sortable.sort(function(a,b){
+        return  a[1]["Answers"] - b[1]["Answers"] 
+    })
+    var ansLen = sortable.length
+    var qCount = ansLen >= 5 ? 5 :ansLen
+    var selected = sortable.concat(0,qCount)
+    var selection = {}
+    selected.forEach(kv =>{
+        var fk = kv[0]
+        selection[fk] = Object.assign({}, kv[1])
+        kv[1]["Answers"].push(null)
+        selection[fk]["Answers"] = 0
+    })
+    //save feedback state
+    dataBackup[fbKey] = JSON.stringify(fb)
+    updateDataBackup()
+    //respond
+    return JSON.stringify({"questions":selection,"fb":{"name":fb.name,"ID":fb.id}})
 }
 
 //from webapp

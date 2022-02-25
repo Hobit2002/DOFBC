@@ -81,7 +81,9 @@ def newFeedback(request):
     form = Form(user_id=getUserID(request),jsonQuestions = basicFormString)
     form.save()
     #create default feedback
-    fb = Feedback(user_id=getUserID(request),form=form)
+    if "uuid" in dict(request.GET).keys():
+        fb = Feedback(id=request.GET["uuid"],user_id=getUserID(request),form=form)
+    else:fb = Feedback(user_id=getUserID(request),form=form)
     fb.save()
     #create and save QR code
     languageDict = loadLanguageDict()
@@ -263,9 +265,8 @@ def activateFeedback(fb):
     #shuffle
     keys = list(answers.keys())
     random.shuffle(keys)
-    shuffledTuple = [(key, answers[key]) for key in keys]
     newDict = {}
-    for k,v in shuffledTuple:newDict[k] = v
+    for key in keys:newDict[key] = answers[key]
     #save
     fb.jsonAnswers = json.dumps(newDict)
     
@@ -275,7 +276,7 @@ def fillFeedback(request):
     fb  = getFeedbackObj(request,trustMode = True)
     if not fb:return errorPage("UnfillableERR",request)
     elif fb.status != "A":return errorPage("UnfillableERR",request)
-    #find five with least rating count
+    #find at most five with least rating count
     answers = json.loads(fb.jsonAnswers)
     answers = {k: v for k, v in sorted(answers.items(), key=lambda item: len(item[1]["Answers"]))}
     ansLen = len(answers.keys())
@@ -290,7 +291,6 @@ def fillFeedback(request):
     fb.jsonAnswers = json.dumps(answers)
     fb.save()
     #return those five in appropriate format
-    print("GET keys:",dict(request.GET).keys())
     if "MI" in dict(request.GET).keys():return JsonResponse({"questions":selection,"fb":{"name":fb.name,"ID":fb.id}})
     else:
         languageDict = loadLanguageDict()

@@ -109,6 +109,8 @@
         </div>
         <div class="app">
             <div class="overlay">
+                <div id="errorDiv">
+                </div>
                 <div id="views">
                     <div id="crossroadView">
                         <div class="center">
@@ -144,9 +146,12 @@
                         </button>
                     </div>
                     <div id="chooseFeedbackView" hidden>
-                        <input id="feedbackAddress" placeholder="url" class="form-control">    
+                        <input id="feedbackAddress" value="https://www.pochlebnik.eu" placeholder="url" class="form-control">    
                         <button id="feedbackBut" class="btn btn-success">
                             Otevřít
+                        </button>
+                        <button id="feedbackScanQRCode" class="btn btn-success">
+                            Naskenovat QR
                         </button>
                     </div>
                     <div id="homeView" hidden>

@@ -1,5 +1,5 @@
 {
-    "domain":"localhost:88",
+    "domain":"localhost:8001",
     "registrationHTML":"Založit nový účet",
     "loginHTML":"Přihlásit se",
     "emailHTML":"Email",

@@ -1,8 +1,8 @@
 {
   "name": "com.example.dofbcmobile",
-  "displayName": "HelloCordova",
-  "version": "1.0.0",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "displayName": "Pochlebnik",
+  "version": "1.0.1",
+  "description": "Application for flexible collection and analysis of feedbacks.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,12 +15,23 @@
   "devDependencies": {
     "cordova-android": "^10.1.1",
     "cordova-browser": "^6.0.0",
-    "cordova-plugin-browsersync": "^1.1.0"
+    "cordova-plugin-add-swift-support": "^2.0.2",
+    "cordova-plugin-browsersync": "^1.1.0",
+    "cordova-plugin-network-information": "^3.0.0",
+    "cordova-plugin-qr-barcode-scanner": "^8.0.3",
+    "cordova-plugin-websocket-server": "^1.6.0"
   },
   "cordova": {
     "platforms": [
       "android",
       "browser"
-    ]
+    ],
+    "plugins": {
+      "cordova-plugin-network-information": {},
+      "cordova-plugin-qr-barcode-scanner": {
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
+      },
+      "cordova-plugin-websocket-server": {}
+    }
   }
 }
