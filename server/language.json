@@ -37,5 +37,7 @@
     "FeedbackCompletedHTML":"Toť vše. Díky!",
     "FeedbackFillURLHTML":"Adresa pro vyplnění",
     "fbreportWindowHTML":"Zobrazit odpovědi",
-    "AnswersHTML":"odpovědí"
+    "AnswersHTML":"odpovědí",
+    "OfflineHTML":"Offline",
+    "OnlineHTML":"Online"
 }

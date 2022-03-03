@@ -55,7 +55,7 @@ function submitQuestion(answer){
     }
     //if all questions were submitted, send them to server
     else{
-        request('submitFeedback',{"ID":fbResponse["fb"]["ID"],"Answers":JSON.stringify(fbData)},"POST")
+        jsonRequest('submitFeedback',{"ID":fbResponse["fb"]["ID"],"Answers":JSON.stringify(fbData)},"POST")
         Questionblock.innerHTML = feedbackCompletedTemplate.innerHTML
         Questiontitle.hidden = true
         ProgressRow.hidden = true

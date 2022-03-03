@@ -46,8 +46,7 @@ function onDeviceReady() {
 
 //global variables
 let CSRFToken
-let server = "https://www.pochlebnik.eu"//"http://localhost:8001"
-let hotspot = "http://192.168.43.1:625974"
+let server = "http://localhost:8001"//"https://www.pochlebnik.eu"
 let staticUrl = server+ "/static/"
 let fbResponse
 let fbData
@@ -135,7 +134,7 @@ function drawFeedback(){
         gFormsFeedback.innerHTML+=loadTemplate("gFormOption",gForm.id,gForm.name)
     })
     //QR address
-    document.getElementById("1QRWindowFeedback").children[1].src = staticUrl + fbData.QRurl
+    document.getElementById("onlineQRCode").src = staticUrl + fbData.QRurl
     //FB status
     fbStatus = fbData.Status
     renderFBStatus(fbData.Status)
@@ -158,21 +157,59 @@ function drawFeedback(){
     }
     else{
         answerList.hidden = true
-    }
-    //if the feedback is active and you are offline, start the server
-    if(fbData.Status == "A" && navigator.connection.type!="NONE"){
-        startSocketServer()
-    }  
+    } 
 }
 
-async function fillFeedback(){
-    var url = feedbackAddress.value+"&MI=1"
-    await request(url,{},'GET',false)
+function drawFeedbackForm(){
     fbResponse = JSON.parse(response)
     fbData = fbResponse["questions"]
     feedbackName.innerHTML = fbResponse["fb"]["name"]
     render('fillFeedback')
     moveQuestion()
+}
+
+async function fillFeedback(){
+    try{
+        //if url was given, call server
+        var url = new URL(feedbackAddress.value+"&MI=1")
+        await request(url.pathname.slice(4)+url.search,{},'GET')
+    }
+    catch(err){
+        //if json was given, randomly choose your own answers
+        var questionset = JSON.parse(feedbackAddress.value)
+        var selection = {"questions":{},"fb":{}}
+        selection["fb"]["name"] = questionset["name"]
+        selection["fb"]["ID"] = questionset["id"]
+        //get the number of verbal and rating feedbacks
+        var questionCount = questionset["Verbal"].length + questionset["Rating"].length
+        var selectionCount = questionCount >=5 ? 5 : questionCount
+        var verbalCount = Math.floor((Math.random() * selectionCount) + 1)
+        var counts = {"Verbal":verbalCount,"Rating":selectionCount-verbalCount}
+        Array.from(["Verbal","Rating"]).forEach(function(type){
+            var secondType = type == "Verbal" ? "Rating" :"Verbal"
+            if(counts[type]>questionset[type].length){
+                counts[secondType]+= counts[type]-questionset[type].length
+                counts[type] = questionset[type].length
+            }
+        })
+        //choose questions
+        Array.from(["Verbal","Rating"]).forEach(function(type){
+            var tSelected = 0
+            var alreadySelected = []
+            while(tSelected < counts[type]){
+                var selectionIndex = Math.floor(Math.random() * questionset[type].length)
+                while(alreadySelected.includes(selectionIndex)){
+                    selectionIndex = Math.floor(Math.random() * questionset[type].length)
+                }
+                alreadySelected.push(selectionIndex)
+                var name = questionset[type][selectionIndex]
+                selection["questions"][name] = {"Type":type,"Answers":0}
+                tSelected += 1
+            }
+        })
+        response = JSON.stringify(selection)
+    }
+    drawFeedbackForm()
 }
 
 async function home(){
@@ -185,7 +222,7 @@ async function home(){
         homeFBSpace.children[homeFBSpace.children.length -1].innerHTML += loadTemplate("fbBlock",fb["id"],fb["name"])
         tok+=1
     })
-    
+
 }
 
 async function login(){
@@ -197,7 +234,7 @@ async function login(){
         return
     }
     //send request
-    if(navigator.connection.type == "NONE"){
+    if(navigator.connection.type == Connection.NONE){
         response = " "
     }
     else{
@@ -207,11 +244,10 @@ async function login(){
     if(response.length){
         authToken = response
         //deal with toSend
-        if(toSend.length){
+        if(toSend.length && navigator.connection.type != Connection.NONE){
             toSend.forEach(async function(reqData){
                 await request(reqData["url"],reqData["paramObject"],reqData["method"],reqData["addBase"])
-            }
-            )
+            })
             toSend = []
             updateToSend()
         }
@@ -236,7 +272,6 @@ function renderFBStatus(status){
 }
 
 function scanQRCode(){
-    errorBlock.innerText+="Button pressed\n"
     try{
         cordova.plugins.barcodeScanner.scan(success,error,{
             showTorchButton: true,
@@ -262,39 +297,10 @@ function scanQRCode(){
     }
 }
 
-function startSocketServer(){
-    var wsserver = cordova.plugins.wsserver;
-    wsserver.start(625974, {
-        // WebSocket Server handlers
-        'onFailure' :  function(addr, port, reason) {
-            console.log('Stopped listening on %s:%d. Reason: %s', addr, port, reason);
-            wsserver.stop()
-        },
-        // WebSocket Connection handlers
-        'onOpen' : function(conn) {
-            wsserver.send({"uuid":conn.uuid},prepareQuestions(conn.resource));
-        },
-        'onMessage' : function(conn, msg) {
-            saveQuestions()
-        },
-        'onClose' : function(conn, code, reason, wasClean) {
-            console.log('A user disconnected from %s', conn.remoteAddr);
-        },
-        // Other options
-        'origins' : [ 'file://' ], // validates the 'Origin' HTTP Header.
-        'protocols' : [ 'my-protocol-v1', 'my-protocol-v2' ], // validates the 'Sec-WebSocket-Protocol' HTTP Header.
-        'tcpNoDelay' : true // disables Nagle's algorithm.
-    }, function onStart(addr, port) {
-        console.log('Listening on %s:%d', addr, port);
-    }, function onDidNotStart(reason) {
-        console.log('Did not start. Reason: %s', reason);
-    });    
-}
-
 //support functions
 async function activeRequest(url,paramObject={},method="GET",addBase = true){
     //if not connected to internet save data to to-send list
-    if(navigator.connection.type == "NONE"){
+    if(navigator.connection.type == Connection.NONE){
         //save to toSend
         toSend.push({"url":url,"paramObject":paramObject,"method":method,"addBase":addBase})
         updateToSend()
@@ -401,6 +407,7 @@ function generateEncDataPairs(paramObject,delAuthToken = false){
     let name
     var urlEncodedDataPairsStr = ""
     if(delAuthToken){
+        console.log("Deleting token")
         delete paramObject["authToken"]
     }
     for(name in paramObject) {
@@ -411,9 +418,8 @@ function generateEncDataPairs(paramObject,delAuthToken = false){
 
 async function jsonRequest(url,paramObject={},method="GET",addBase = true){
     //if not connected to internet use dataBackup
-    if(navigator.connection.type == "NONE"){
+    if(navigator.connection.type == Connection.NONE){
         var dbKey = url + generateEncDataPairs(paramObject,true)
-        console.log(dbKey)
         if(Object.keys(dataBackup).includes(dbKey)){
             response = dataBackup[dbKey]
         }
@@ -506,7 +512,23 @@ function shuffle(array) {
   
     return array;
 }
-  
+
+async function switchQRNetworkState(newstate){
+    //send request
+    if(newstate=="offline"){
+        await request("generateOfflineQR",{"ID":feedbackObjId.value},"GET")
+        //set src
+        offlineQRCode.src = onlineQRCode.src.replace(".png","off.png")
+    }
+    //handle hiding and disabling
+    var oldstate = newstate == "offline" ? "online" : "offline"
+    console.log(oldstate+"SwitchQRButtonFeedback")
+    document.getElementById(newstate+"SwitchQRButtonFeedback").disabled = true
+    document.getElementById(oldstate+"SwitchQRButtonFeedback").disabled = false
+    document.getElementById(newstate+"QRFeedback").hidden = false
+    document.getElementById(oldstate+"QRFeedback").hidden = true
+}
+
 function updateDataBackup(){
     localStorage.setItem("dataBackup",JSON.stringify(dataBackup))
 }
@@ -516,8 +538,7 @@ function updateToSend(){
 }
 
 function urlBase(){
-    var target = navigator.connection.type != "NONE" ? server : hotspot
-    return target +"/mi/"
+    return server +"/mi/"
 }
 
 function uuidv4() {
@@ -558,10 +579,9 @@ function activateFeedback(fb){
     fb.Answers = JSON.stringify(newObj) 
 }
 
-function prepareQuestions(resource){
+function prepareQuestions(fbId){
     //load feedback data and get feedback state
-    var url = URL(server+resource)
-    var fbKey = "feedback" + generateEncDataPairs({"ID":url.searchParams.get('ID')},true)
+    var fbKey = "feedback" + generateEncDataPairs({"ID":fbId},true)
     var fb = JSON.parse(dataBackup[fbKey])
     if(fb.Status!="A"){
         return "BadFeedbackState"
@@ -590,6 +610,8 @@ function prepareQuestions(resource){
     //respond
     return JSON.stringify({"questions":selection,"fb":{"name":fb.name,"ID":fb.id}})
 }
+
+function saveQuestions(){}
 
 //from webapp
 function edittextContent(object,site){

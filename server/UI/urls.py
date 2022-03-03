@@ -16,5 +16,6 @@ urlpatterns = [
     path('changeStatus',uiViews.changeStatus),
     path('fillFeedback',uiViews.fillFeedback),
     path('submitFeedback',uiViews.submitFeedback),
-    path('graphData',uiViews.graphData)
+    path('graphData',uiViews.graphData),
+    path('generateOfflineQR',uiViews.generateOfflineQR)
 ]

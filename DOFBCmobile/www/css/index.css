@@ -301,7 +301,7 @@ h1 {
     padding:8px; 
  }
  
-.newButton{
+.newButton,.switchNetworkButton{
     background-color: rgb(7, 148, 117);
 }
 

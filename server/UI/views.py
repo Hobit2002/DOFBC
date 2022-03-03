@@ -96,9 +96,33 @@ def newFeedback(request):
     qrImf = qrObj.make_image().convert('RGB')
     qrImf.save("static/QRcodes/"+str(fb.id)+".png")
     #redirect to feedback page
-    prefix = "mi" if "MI" in dict(request.GET).keys() else "ui" 
-    url="{}?{}".format('/%s/feedback'%prefix,urlencode({"ID":fb.id}))
+    getParams = {"ID":fb.id}
+    if "MI" in dict(request.GET).keys():
+        prefix = "mi"
+        getParams["authToken"] = request.GET["authToken"] 
+    else:
+        prefix = "ui"
+    url="{}?{}".format('/%s/feedback'%prefix,urlencode(getParams))
     return redirect(url)
+
+#generate json qr code
+def generateOfflineQR(request):
+    #load questions
+    fb = getFeedbackObj(request)
+    form = Form.objects.filter(id=fb.form_id)[0]
+    questions = json.loads(form.jsonQuestions)
+    questions["name"] = fb.name
+    questions["id"] = fb.id
+    #save them as QR code
+    qrObj = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=10,
+        border=4)
+    qrObj.add_data(questions)
+    qrImf = qrObj.make_image().convert('RGB')
+    qrImf.save("static/QRcodes/"+str(fb.id)+"off"+".png")
+    return HttpResponse('OK')
 
 #getFeedbackObj
 def getFeedbackObj(request,method="GET",trustMode=False):

@@ -15,13 +15,15 @@ function userRequest(url,paramObject={},method="GET",visible=true,altHtmlDestina
         }
 
         request.onreadystatechange = function() {
-            if(request.readyState == 4 && request.status == 200 && visible) {
+            if(request.readyState == 4 && request.status == 200) {
                 //redraw content block
-                var destination = altHtmlDestination ? altHtmlDestination : utContent;
-                destination.innerHTML = request.responseText
-                if(!altHtmlDestination){
-                    window.history.pushState({},"",request.responseURL.replace("&ajaxForm=1",""))
-                    historyList.push(request.responseURL)
+                if(visible){
+                    var destination = altHtmlDestination ? altHtmlDestination : utContent;
+                    destination.innerHTML = request.responseText
+                    if(!altHtmlDestination){
+                        window.history.pushState({},"",request.responseURL.replace("&ajaxForm=1",""))
+                        historyList.push(request.responseURL)
+                    }
                 }
                 resolve() 
             }
@@ -138,6 +140,23 @@ function switchToplineWindowBlock(element){
     var newId = newPrefix+element.id.slice(1)
     element.hidden = true
     document.getElementById(newId).hidden=false
+}
+
+//special functions
+async function switchQRNetworkState(newstate){
+    //send request
+    if(newstate=="offline"){
+        await userRequest("generateOfflineQR",{"ID":feedbackObjId.value},"GET",false)
+        //set src
+        offlineQRCode.src = onlineQRCode.src.replace(".png","off.png")
+    }
+    //handle hiding and disabling
+    var oldstate = newstate == "offline" ? "online" : "offline"
+    console.log(oldstate+"SwitchQRButtonFeedback")
+    document.getElementById(newstate+"SwitchQRButtonFeedback").disabled = true
+    document.getElementById(oldstate+"SwitchQRButtonFeedback").disabled = false
+    document.getElementById(newstate+"QRFeedback").hidden = false
+    document.getElementById(oldstate+"QRFeedback").hidden = true
 }
 
 //Functions for showing feedback

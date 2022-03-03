@@ -32,8 +32,20 @@
         </div>
         <div id="1QRWindowFeedback" class="middlePageFixed" hidden>
             <button class="closeButton goUp" onclick="switchToplineWindowBlock(this.parentElement)">{{CloseHTML}}</button>
-            <img src="{% static '' %}{{QRurl}}" class="centerImage">
-            <div><br>{{FeedbackFillURLHTML}}:{{fillUrl}}</div>
+            <div id="switchNetworkStateHTML">
+                {{QRWindowHTML}}:
+                <button id="offlineSwitchQRButtonFeedback" onclick="switchQRNetworkState('offline')" class="switchNetworkButton">{{OfflineHTML}}</button>
+                <button id="onlineSwitchQRButtonFeedback" onclick="switchQRNetworkState('online')" class="switchNetworkButton" disabled>{{OnlineHTML}}</button>
+            </div>
+            <div id="qrBlocksFeedback">
+                <div id="onlineQRFeedback">
+                    <img id="onlineQRCode" src="{% static '' %}{{QRurl}}" class="centerImage">
+                    <div><br>{{FeedbackFillURLHTML}}:{{fillUrl}}</div>
+                </div>
+                <div id="offlineQRFeedback" hidden>
+                    <img id="offlineQRCode" src="" class="centerImage">
+                </div>
+            </div>
         </div>
     </div>
     <div class="toplineWindow">
