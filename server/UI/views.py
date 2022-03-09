@@ -112,14 +112,15 @@ def generateOfflineQR(request):
     form = Form.objects.filter(id=fb.form_id)[0]
     questions = json.loads(form.jsonQuestions)
     questions["name"] = fb.name
-    questions["id"] = fb.id
+    questions["id"] = str(fb.id)
     #save them as QR code
     qrObj = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_H,
         box_size=10,
         border=4)
-    qrObj.add_data(questions)
+    qrString = json.dumps(questions).replace("  ","").replace("\n","")
+    qrObj.add_data(qrString)
     qrImf = qrObj.make_image().convert('RGB')
     qrImf.save("static/QRcodes/"+str(fb.id)+"off"+".png")
     return HttpResponse('OK')

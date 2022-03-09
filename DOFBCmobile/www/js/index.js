@@ -46,7 +46,7 @@ function onDeviceReady() {
 
 //global variables
 let CSRFToken
-let server = "http://localhost:8001"//"https://www.pochlebnik.eu"
+let server = "https://www.pochlebnik.eu"//"http://localhost:8001"
 let staticUrl = server+ "/static/"
 let fbResponse
 let fbData
@@ -226,36 +226,41 @@ async function home(){
 }
 
 async function login(){
-    //load login data from storages
-    var loginname = window.localStorage.getItem("loginname")
-    var password = window.localStorage.getItem("password")
-    if(loginname==undefined || password==undefined){
-        render("login")
-        return
-    }
-    //send request
-    if(navigator.connection.type == Connection.NONE){
-        response = " "
-    }
-    else{
-        await request("checkAuth",{"loginname":loginname,"password":password},"POST")
-    }
-    //render the screen accordingly
-    if(response.length){
-        authToken = response
-        //deal with toSend
-        if(toSend.length && navigator.connection.type != Connection.NONE){
-            toSend.forEach(async function(reqData){
-                await request(reqData["url"],reqData["paramObject"],reqData["method"],reqData["addBase"])
-            })
-            toSend = []
-            updateToSend()
+    try{
+        //load login data from storages
+        var loginname = window.localStorage.getItem("loginname")
+        var password = window.localStorage.getItem("password")
+        if(loginname==undefined || password==undefined){
+            render("login")
+            return
         }
-        //move to home page
-        home()
+        //send request
+        if(navigator.connection.type == Connection.NONE){
+            response = " "
+        }
+        else{
+            await request("checkAuth",{"loginname":loginname,"password":password},"POST")
+        }
+        //render the screen accordingly
+        if(response.length){
+            authToken = response
+            //deal with toSend
+            if(toSend.length && navigator.connection.type != Connection.NONE){
+                toSend.forEach(async function(reqData){
+                    await request(reqData["url"],reqData["paramObject"],reqData["method"],reqData["addBase"])
+                })
+                toSend = []
+                updateToSend()
+            }
+            //move to home page
+            home()
+        }
+        else{
+            render("login")
+        }
     }
-    else{
-        render("login")
+    catch(err){
+        errorDiv.innerHTML = err
     }
 }
 

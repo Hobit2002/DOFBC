@@ -24,10 +24,10 @@
       "browser"
     ],
     "plugins": {
-      "cordova-plugin-network-information": {},
       "cordova-plugin-qr-barcode-scanner": {
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
-      }
+      },
+      "cordova-plugin-network-information": {}
     }
   }
 }
