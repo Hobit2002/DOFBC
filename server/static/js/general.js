@@ -147,7 +147,7 @@ async function switchQRNetworkState(newstate){
     //send request
     if(newstate=="offline"){
         await userRequest("generateOfflineQR",{"ID":feedbackObjId.value},"GET",false)
-        //set src
+    //set src
         offlineQRCode.src = onlineQRCode.src.replace(".png","off.png")
     }
     //handle hiding and disabling

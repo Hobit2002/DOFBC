@@ -93,20 +93,26 @@
 
 .faceBlock{
     padding: 3vw;
-    max-height: 90vh;
+    height: 90vh;
     overflow-y:auto;
 }
 
 .aboutApp{
     width: 50vw;
     margin-left: 20vw;
-    margin-bottom: 10vh;
     background-color: rgb(159, 189, 124);
 }
 
 .formBlock{
     background-color: rgb(106, 168, 95);
-    width:10vw;
+    width:18vw;
+}
+
+.likeImage{
+    width: 19vw; 
+    height: 25.5vh; 
+    object-fit: cover;
+    margin-left: 12vw;
 }
 
 /* classes for row lists */
@@ -230,6 +236,18 @@
     font-weight:bold;
     background-color: rgb(43, 61, 40);
     color: rgb(212, 236, 192);
+}
+
+.cornerLinkButton{
+    position: fixed;
+    top: 1%;
+    left: 1%;
+    border-radius: 30%;
+    padding:16px;
+    font-weight: bold;
+    color: rgb(255,255,240);
+    background-color: rgb(15, 173, 23);
+    z-index: 2;
 }
 
 /*Feedback styles*/

@@ -51,6 +51,7 @@ def authenticate(request):
 #login:logs user in
 def login(request):
     languageDict = loadLanguageDict()
+    languageDict.update(json.load(open("openingPage.json")))
     return answer(request,"unloggedTemplates/login.html",languageDict)
 
 #logout
@@ -165,10 +166,13 @@ def generateAnswers(languageDict):
     answers = {"Verbal":[],"Rating":[]}
     for fbType in ["Verbal","Rating"]:
         for question in languageDict["Questions"][fbType]:
-            answers[fbType].append({"Name":question,"Answers":[]})
-            for pans in languageDict["Answers"][question]["Answers"]:
-                if type(pans)==dict:answers[fbType][-1]["Answers"].append(pans["Answers"])
-                else:break 
+            try:
+                answers[fbType].append({"Name":question,"Answers":[]})
+                for pans in languageDict["Answers"][question]["Answers"]:
+                    if type(pans)==dict:answers[fbType][-1]["Answers"].append(pans["Answers"])
+                    else:break
+            except KeyError:
+                pass
     return answers
 
 #feedback:returns page, where feedback can be edited

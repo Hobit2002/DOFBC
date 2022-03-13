@@ -139,22 +139,29 @@
                         </div>
                     </div>
                     <div id="loginView" class="form-group" hidden>
-                        <input id="loginnameLogin" placeholder="login" class="form-control">
-                        <input id="passwordLogin" type="password" placeholder="heslo" class="form-control">    
-                        <button id="loginBut" class="btn btn-success">
-                            Přihlásit se
-                        </button>
+                        <button id="fillFeedbackButtonLogin" class="cornerLinkButton">Vyplnit</button>
+                        <div class="formBlock">
+                            <input id="loginnameLogin" placeholder="login" class="form-control">
+                            <input id="passwordLogin" type="password" placeholder="heslo" class="form-control">    
+                            <button id="loginBut" class="btn btn-success">
+                                Přihlásit se
+                            </button>
+                        </div>
                     </div>
                     <div id="chooseFeedbackView" hidden>
-                        <input id="feedbackAddress" value="https://www.pochlebnik.eu" placeholder="url" class="form-control">    
-                        <button id="feedbackBut" class="btn btn-success">
-                            Otevřít
-                        </button>
-                        <button id="feedbackScanQRCode" class="btn btn-success">
-                            Naskenovat QR
-                        </button>
+                        <button id="homeButtonchooseFeedback" class="cornerLinkButton">Upravit</button>
+                        <div class="formBlock">
+                            <input id="feedbackAddress" value="https://www.pochlebnik.eu" placeholder="url" class="form-control">    
+                            <button id="feedbackBut" class="btn btn-success">
+                                Otevřít
+                            </button>
+                            <button id="feedbackScanQRCode" class="btn btn-success">
+                                Naskenovat QR
+                            </button>
+                        </div>
                     </div>
                     <div id="homeView" hidden>
+                        <button id="fillFeedbackButtonHome" class="cornerLinkButton">Vyplnit</button>
                         <div class="blockList">
                             <div class="container" id="homeFBSpace">
                             </div>
@@ -163,6 +170,7 @@
                     </div>
                     <div id="feedbackView" hidden>
                         <input type="hidden" id="feedbackObjId">
+                        <button id="homeButtonFeedback" class="cornerLinkButton">Domů</button>
                         <div class="centerTitle">
                             <div id="nameFeedback" onclick="edittextContent(this,'feedback')"></div>
                             <button onclick="deleteObject()" content-editable="false" class="deleteButton">
@@ -210,6 +218,7 @@
                                         </div>
                                         <div id="offlineQRFeedback" hidden>
                                             <img id="offlineQRCode" src="" class="centerImage">
+                                            <div id="offlineQRDiv"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -251,6 +260,7 @@
         <script src="js/index.js"></script>
         <script src="js/feedback.js"></script>
         <script src="js/chart.js"></script>
+        <script src="js/qrcode.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     </body>
 </html>

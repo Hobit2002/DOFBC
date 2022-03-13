@@ -1,6 +1,6 @@
 {
   "name": "com.example.dofbcmobile",
-  "displayName": "Pochlebnik",
+  "displayName": "Pochlebník",
   "version": "1.0.1",
   "description": "Application for flexible collection and analysis of feedbacks.",
   "main": "index.js",

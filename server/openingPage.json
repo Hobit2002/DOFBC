@@ -1,0 +1,29 @@
+{
+    "AppNameOp":"Pochlebník",
+    "SummaryOp": "Systém pro sběr zpětných vazeb k akcím pro mládež.",
+    "features":[
+        {
+            "ID":"MobileWeb",
+            "featOp":"Mobilní i webová aplikace",
+            "sumOp":"Registraci proveďte na webu Pochlebníka. Účet pak budete moct použít i v mobilní aplikaci stažitelné podle návodu uvedeného v projektové dokumentaci:",
+            "link":"https://www.pochlebnik.eu/static/dokumentace.pdf"
+        },
+        {
+            "ID":"QuestIndx",
+            "featOp":"Efektivní distribuce otázek",
+            "sumOp":"Pochlebník každému respondentovi položí jinou sadu otázek. Díky tomu je možné získat odpovědi na mnoho různých dotazů a přitom nikoho neznudit."
+        },
+        {
+            "ID":"Offline",
+            "featOp":"Funkční i offline",
+            "sumOp":"Pochlebník nabízí možnost uložit zpětné vazby do QR kódu, z něhož mohou být mobilní aplikací načteny klidně i uprostřed lesa."
+        },
+        {
+            "ID":"Graphs",
+            "featOp":"Přehledné grafy",
+            "sumOp":"U každé hodnocené akce si budete moct zobrazit, jak si vedla s ostatními."
+        }
+    ]
+    
+
+}

@@ -1,7 +1,11 @@
-<h1>{% lorem 3 w %}</h1>
-<h2>{% lorem 2 w random %}</h2>
-{% lorem 4 p random %}
-<h2>{% lorem 2 w random %}</h2>
-{% lorem 4 p random %}
-<h2>{% lorem 2 w random %}</h2>
-{% lorem 4 p random %}
+{% load static %}
+<h1>{{AppNameOp}}</h1>
+<h2>{{SummaryOp}}</h2>
+{% for feature in features %}
+    <h3>{{feature.featOp}}</h3>{{feature.sumOp}}
+    {% if feature.ID == 'MobileWeb' %}
+        <a href="{{feature.link}}">{{feature.link}}</a>
+    {% endif %}
+    <br>
+{% endfor %}
+<img class="likeImage" src="{% static 'logo.png' %}">

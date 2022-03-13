@@ -81,6 +81,14 @@ feedbackBut.addEventListener('click',fillFeedback,false)
 
 feedbackScanQRCode.addEventListener('click',scanQRCode,false)
 
+fillFeedbackButtonHome.addEventListener('click',function(){render('chooseFeedback')},false)
+
+fillFeedbackButtonLogin.addEventListener('click',function(){render('chooseFeedback')},false)
+
+homeButtonFeedback.addEventListener('click',home,false)
+
+homeButtonchooseFeedback.addEventListener('click',login,false)
+
 loginBut.addEventListener('click',function(){
     window.localStorage.setItem("loginname",loginnameLogin.value)
     window.localStorage.setItem("password",passwordLogin.value)
@@ -521,9 +529,20 @@ function shuffle(array) {
 async function switchQRNetworkState(newstate){
     //send request
     if(newstate=="offline"){
-        await request("generateOfflineQR",{"ID":feedbackObjId.value},"GET")
-        //set src
-        offlineQRCode.src = onlineQRCode.src.replace(".png","off.png")
+        if(navigator.connection.type == Connection.NONE){
+            offlineQRDiv.innerHTML = ""
+            var fb = JSON.parse(dataBackup["feedback" +generateEncDataPairs({"ID":feedbackObjId.value})])
+            var answers = fb["Answers"]
+            answers["id"] = feedbackObjId.value
+            answers["name"] = fb.name
+            new QRCode(offlineQRDiv,JSON.stringify(answers))
+        }
+        else{
+            await request("generateOfflineQR",{"ID":feedbackObjId.value},"GET")
+            //set src
+            offlineQRCode.src = onlineQRCode.src.replace(".png","off.png")
+        }
+        
     }
     //handle hiding and disabling
     var oldstate = newstate == "offline" ? "online" : "offline"
@@ -616,7 +635,6 @@ function prepareQuestions(fbId){
     return JSON.stringify({"questions":selection,"fb":{"name":fb.name,"ID":fb.id}})
 }
 
-function saveQuestions(){}
 
 //from webapp
 function edittextContent(object,site){
