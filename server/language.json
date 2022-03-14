@@ -8,6 +8,7 @@
     "usernameHTML":"Uživatelské jméno",
     "NoSuchFBERR":"K hledané zpětné vazbě nemáte přístup",
     "UnfillableERR":"Zpětná vazba aktuálně nemůže být vyplněna",
+    "PasswordsNoMatchERR":"Heslo se neshoduje se svým potvrzením",
     "NoNameYetHTML":"Dosud bez jména",
     "NewFBHTML":"Přidat zpětnou vazbu",
     "ratingQuestionsHTML":"Bodovací otázky",

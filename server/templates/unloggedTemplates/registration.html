@@ -5,7 +5,7 @@
     <input id="passwordRegistration" class="input100jtl" type="password" placeholder="{{passwordHTML}}">
     <input id="passwordCheckRegistration" class="input100jtl" type="password" placeholder="{{passwordConfirmationHTML}}">
             
-    <button id="LoginButton" onclick="userRequest('register',{'username':usernameRegistration.value,'password':passwordRegistration.value},'POST')">
+    <button id="LoginButton" onclick="handleButtonClick('register',{'username':usernameRegistration.value,'password':passwordRegistration.value},{'{{PasswordsNoMatchERR}}':passwordRegistration.value==passwordCheckRegistration.value},'POST')">
         {{registrationHTML}}
     </button>
 

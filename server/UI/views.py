@@ -65,6 +65,7 @@ def logout(request):
 def home(request):
     languageDict = loadLanguageDict()
     languageDict["feedbacks"] = Feedback.objects.filter(user_id = getUserID(request)).order_by('submissionDate')
+    for fb in languageDict["feedbacks"]:fb.name = json.loads("[\""+fb.name+"\"]")[0]
     #prepare row breakpoints
     feedbackCount =len(languageDict["feedbacks"])
     rowLen = 7
@@ -184,7 +185,7 @@ def feedback(request):
     languageDict = loadLanguageDict()
     languageDict["Feedback"] = fb
     languageDict["HasName"] = fb.name.replace(" ","") != ""
-    if languageDict["HasName"]: 
+    if languageDict["HasName"]:
         languageDict["FeedbackName"] = json.loads("[\""+fb.name+"\"]")[0]
     languageDict["Answers"] = json.loads(fb.jsonAnswers)
     #Form data 
@@ -210,9 +211,9 @@ def feedbackUpdate(request):
     fb = getFeedbackObj(request)
     if not fb:return errorPage("NoSuchFBERR",request)
     parameter = request.GET["parameter"]
-    value = request.GET["value"]
+    value = request.GET["value"].replace("\xc2\xa0", " ")
     if parameter == "name":
-        fb.name = json.dumps([value])[1:-1]
+        fb.name = json.dumps([value])[2:-2]
     elif parameter[0:8]=="question":
         questions = json.loads(fb.form.jsonQuestions)
         queType = parameter[8:14]
@@ -330,7 +331,8 @@ def fillFeedback(request):
     else:
         languageDict = loadLanguageDict()
         languageDict["questions"] = selection
-        languageDict["fb"] = fb
+        fb.name
+        languageDict["fb"] = json.loads("[\""+fb.name+"\"]")[0]
         return answer(request,"unloggedTemplates/fillFeedback.html",languageDict)
 
 #submit feedback
@@ -342,7 +344,7 @@ def submitFeedback(request):
     #parse response
     answers= json.loads(request.POST["Answers"])
     #copy answers
-    unexpected = "Unexpected" in dict(request.GET).keys()
+    unexpected = "Unexpected" in dict(request.POST).keys()
     for param,answerData in answers.items():
         ansList = fbAnswers[param]["Answers"]
         if not unexpected:del ansList[-1]

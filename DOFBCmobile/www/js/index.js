@@ -171,7 +171,7 @@ function drawFeedback(){
 function drawFeedbackForm(){
     fbResponse = JSON.parse(response)
     fbData = fbResponse["questions"]
-    feedbackName.innerHTML = fbResponse["fb"]["name"]
+    feedbackName.innerHTML = JSON.parse("[\""+fbResponse["fb"]["name"]+"\"]")[0]
     render('fillFeedback')
     moveQuestion()
 }
@@ -227,7 +227,7 @@ async function home(){
     var tok = 0
     Array.from(feedbacks).forEach(function(fb){
         if(!(tok%3)){homeFBSpace.innerHTML+=loadTemplate("fbBlockRow")}
-        homeFBSpace.children[homeFBSpace.children.length -1].innerHTML += loadTemplate("fbBlock",fb["id"],fb["name"])
+        homeFBSpace.children[homeFBSpace.children.length -1].innerHTML += loadTemplate("fbBlock",fb["id"],JSON.parse("[\""+fb["name"]+"\"]")[0])
         tok+=1
     })
 
@@ -576,31 +576,31 @@ function uuidv4() {
 
 //from server
 function activateFeedback(fb){
-    var questions = JSON.parse(fb.Questions)
-    var answers = JSON.parse(fb.Answers)
-    //delete deleted questions from form
-    var refAns = JSON.parse(JSON.stringify(answers))
+    var questions = fb.Questions
+    var fbAnswers = JSON.parse(fb.Answers)
+    //copy fbAnswers and delete deleted questions from form
+    var refAns = JSON.parse(JSON.stringify(fbAnswers))
     Object.entries(refAns).forEach(([qName,qDict]) => {
         var qType = qDict["Type"]
         if(questions[qType].includes(qName)){
             delete questions[qType][questions[qType].indexOf(qName)]
         }
         else{
-            delete answers[qName]
+            delete fbAnswers[qName]
         }
     })
     //copy new questions to answers
     Object.entries(questions).forEach(([qType,typeList]) => {
         typeList.forEach(q=>{
-            answers[q] = {"Type":qType,"Answers":[]}
+            fbAnswers[q] = {"Type":qType,"Answers":[]}
         })
 
     })
     //shuffle
-    var keys = shuffle(Object.keys(answers))
+    var keys = shuffle(Object.keys(fbAnswers))
     var newObj = {}
     keys.forEach(key=>{
-        newObj[key] = answers[key]
+        newObj[key] = fbAnswers[key]
     })
     //save
     fb.Answers = JSON.stringify(newObj) 
