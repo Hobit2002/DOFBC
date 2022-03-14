@@ -102,7 +102,7 @@ newFeedbackHomeBut.addEventListener('click',async function(){
 })
 
 async function changeStatus(dir){
-    await request('changeStatus',{'ID':feedbackObjId.value,'dir':dir})
+    await activeRequest('changeStatus',{'ID':feedbackObjId.value,'dir':dir})
     fbStatus = fbStatusList[fbStatusList.indexOf(fbStatus)+dir]
     renderFBStatus(fbStatus)
 }
@@ -136,7 +136,7 @@ function drawFeedback(){
     if(fbData.name=="" || fbData.name==undefined){
         fbData.name = JSDict["FormNameHTML"]
     }
-    nameFeedback.innerHTML = fbData.name
+    nameFeedback.innerHTML = JSON.parse("[\""+fbData.name+"\"]")[0]
     //options
     Array.from(fbData.gForms).forEach(function(gForm){
         gFormsFeedback.innerHTML+=loadTemplate("gFormOption",gForm.id,gForm.name)
@@ -345,7 +345,8 @@ async function activeRequest(url,paramObject={},method="GET",addBase = true){
                 var newVal = paramObject["value"]
                 var parameter = paramObject["parameter"]
                 if(parameter=='name'){
-                    fb.name = newVal
+                    var nameJSONEncoded = JSON.stringify([newVal])
+                    fb.name = nameJSONEncoded.slice(2,nameJSONEncoded.length-2)
                     //update feedback list
                     var feedbackList = JSON.parse(dataBackup["home"])
                     for(i=0;i<feedbackList.length;i++){
@@ -399,6 +400,8 @@ async function activeRequest(url,paramObject={},method="GET",addBase = true){
                 var feedbackList = JSON.parse(dataBackup["home"])
                 feedbackList.push({"name":"","id":uuid})
                 dataBackup["home"] = JSON.stringify(feedbackList)
+                break
+            default:
                 break  
         }
         updateDataBackup()
@@ -532,10 +535,10 @@ async function switchQRNetworkState(newstate){
         if(navigator.connection.type == Connection.NONE){
             offlineQRDiv.innerHTML = ""
             var fb = JSON.parse(dataBackup["feedback" +generateEncDataPairs({"ID":feedbackObjId.value})])
-            var answers = fb["Answers"]
-            answers["id"] = feedbackObjId.value
-            answers["name"] = fb.name
-            new QRCode(offlineQRDiv,JSON.stringify(answers))
+            var qrQuestions = fb["Questions"]
+            qrQuestions["id"] = feedbackObjId.value
+            qrQuestions["name"] = fb.name
+            new QRCode(offlineQRDiv,JSON.stringify(qrQuestions))
         }
         else{
             await request("generateOfflineQR",{"ID":feedbackObjId.value},"GET")
@@ -658,7 +661,7 @@ function addQuestion(type){
 function deleteQuestion(parElem,type){
     //send message
     var question = parElem.children[0]
-    question.innerHTML=""
+    question.innerHTML="\n"
     commitChanges('feedback',question)
     //delete elem
     parElem.remove()

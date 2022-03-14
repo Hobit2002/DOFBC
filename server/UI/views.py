@@ -26,6 +26,7 @@ def welcome(request):
 #registration:return page for registration
 def registration(request):
     languageDict = loadLanguageDict()
+    languageDict.update(json.load(open("openingPage.json")))
     return answer(request,"unloggedTemplates/registration.html",languageDict)
         
 #register:create new user
@@ -34,9 +35,10 @@ def register(request):
     username =request.POST["username"]
     #insert to database
     User.objects.create_user(username=username,password = password)
-    djAuthenticate(password=password,username=username)
+    user = djAuthenticate(password=password,username=username)
+    djLogin(request,user)
     #redirect
-    return redirect("/ui/home")
+    return redirect("/ui/home?&ajaxForm=1")
 
 #authenticate
 def authenticate(request):
@@ -182,6 +184,8 @@ def feedback(request):
     languageDict = loadLanguageDict()
     languageDict["Feedback"] = fb
     languageDict["HasName"] = fb.name.replace(" ","") != ""
+    if languageDict["HasName"]: 
+        languageDict["FeedbackName"] = json.loads("[\""+fb.name+"\"]")[0]
     languageDict["Answers"] = json.loads(fb.jsonAnswers)
     #Form data 
     frm = Form.objects.filter(id=fb.form.id)[0]
@@ -198,6 +202,7 @@ def feedback(request):
     if alreadyFilled:languageDict["answerObj"] = generateAnswers(languageDict)
     #Load global forms
     languageDict["gForms"] = Form.objects.filter(user_id = getUserID(request),globalForm= True)
+    for gForm in languageDict["gForms"]:gForm.name=json.loads(gForm.name)[0]
     return answer(request,"loggedTemplates/feedback.html",languageDict)
 
 #feedbackUpdate
@@ -207,12 +212,13 @@ def feedbackUpdate(request):
     parameter = request.GET["parameter"]
     value = request.GET["value"]
     if parameter == "name":
-        fb.name = value
+        fb.name = json.dumps([value])[1:-1]
     elif parameter[0:8]=="question":
         questions = json.loads(fb.form.jsonQuestions)
         queType = parameter[8:14]
         index = int(parameter[14:]) - 1
-        if len(value):
+        print("Deleting:",value,"_Length:",len(value.replace(" ","")))
+        if len(value.replace(" ","").replace("\n","")):
             try:
                 questions[queType][index] = value
             except IndexError:
@@ -236,7 +242,7 @@ def newForm(request):
     fb = getFeedbackObj(request)
     frm = Form.objects.filter(id=fb.form.id)[0]
     #create copy
-    gFrm=Form(globalForm=True,name=request.GET["name"],user_id=getUserID(request),jsonQuestions=frm.jsonQuestions)
+    gFrm=Form(globalForm=True,name=json.dumps([request.GET["name"]]),user_id=getUserID(request),jsonQuestions=frm.jsonQuestions)
     #save and leave
     gFrm.save()
     return HttpResponse('OK')
@@ -336,9 +342,10 @@ def submitFeedback(request):
     #parse response
     answers= json.loads(request.POST["Answers"])
     #copy answers
+    unexpected = "Unexpected" in dict(request.GET).keys()
     for param,answerData in answers.items():
         ansList = fbAnswers[param]["Answers"]
-        del ansList[-1]
+        if not unexpected:del ansList[-1]
         ansList.insert(0,answerData)
     #save
     fb.jsonAnswers = json.dumps(fbAnswers)

@@ -7,7 +7,7 @@
     <input type="hidden" id="feedbackObjId" value="{{Feedback.id}}">
     <div class="centerTitle" id="nameFeedback" onclick="edittextContent(this,'feedback')">
         {% if HasName %}
-            {{Feedback.name}}
+            {{FeedbackName}}
         {% else %}
             {{NoNameYetHTML}}
         {% endif %}

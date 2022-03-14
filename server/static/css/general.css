@@ -21,6 +21,7 @@
 
 .twoFacedBlock{
     display: flex;
+    margin-top: 3vh;
 }
 
 .centerTitle{
