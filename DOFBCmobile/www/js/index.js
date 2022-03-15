@@ -423,7 +423,6 @@ function generateEncDataPairs(paramObject,delAuthToken = false){
     let name
     var urlEncodedDataPairsStr = ""
     if(delAuthToken){
-        console.log("Deleting token")
         delete paramObject["authToken"]
     }
     for(name in paramObject) {
@@ -549,7 +548,6 @@ async function switchQRNetworkState(newstate){
     }
     //handle hiding and disabling
     var oldstate = newstate == "offline" ? "online" : "offline"
-    console.log(oldstate+"SwitchQRButtonFeedback")
     document.getElementById(newstate+"SwitchQRButtonFeedback").disabled = true
     document.getElementById(oldstate+"SwitchQRButtonFeedback").disabled = false
     document.getElementById(newstate+"QRFeedback").hidden = false
