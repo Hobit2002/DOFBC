@@ -123,7 +123,7 @@ def generateOfflineQR(request):
         error_correction=qrcode.constants.ERROR_CORRECT_H,
         box_size=10,
         border=4)
-    qrString = json.dumps(questions).replace("  ","").replace("\n","")
+    qrString = json.dumps(questions).replace("  ","").replace("\\n","")
     qrObj.add_data(qrString)
     qrImf = qrObj.make_image().convert('RGB')
     qrImf.save("static/QRcodes/"+str(fb.id)+"off"+".png")
@@ -218,12 +218,11 @@ def feedbackUpdate(request):
         questions = json.loads(fb.form.jsonQuestions)
         queType = parameter[8:14]
         index = int(parameter[14:]) - 1
-        print("Deleting:",value,"_Length:",len(value.replace(" ","")))
         if len(value.replace(" ","").replace("\n","")):
             try:
-                questions[queType][index] = value
+                questions[queType][index] = value.replace("  ","").replace("\n","")
             except IndexError:
-                questions[queType].append(value)
+                questions[queType].append(value.replace("  ","").replace("\n",""))
         else:
             del questions[queType][index]
         fb.form.jsonQuestions = json.dumps(questions)
@@ -331,7 +330,6 @@ def fillFeedback(request):
     else:
         languageDict = loadLanguageDict()
         languageDict["questions"] = selection
-        fb.name
         languageDict["fb"] = json.loads("[\""+fb.name+"\"]")[0]
         return answer(request,"unloggedTemplates/fillFeedback.html",languageDict)
 
@@ -340,18 +338,19 @@ def fillFeedback(request):
 def submitFeedback(request):
     #load feedback
     fb = getFeedbackObj(request,method="POST",trustMode=True)
-    fbAnswers = json.loads(fb.jsonAnswers)
-    #parse response
-    answers= json.loads(request.POST["Answers"])
-    #copy answers
-    unexpected = "Unexpected" in dict(request.POST).keys()
-    for param,answerData in answers.items():
-        ansList = fbAnswers[param]["Answers"]
-        if not unexpected:del ansList[-1]
-        ansList.insert(0,answerData)
-    #save
-    fb.jsonAnswers = json.dumps(fbAnswers)
-    fb.save()
+    if fb.status=="A":
+        fbAnswers = json.loads(fb.jsonAnswers)
+        #parse response
+        answers= json.loads(request.POST["Answers"])
+        #copy answers
+        unexpected = "Unexpected" in dict(request.POST).keys()
+        for param,answerData in answers.items():
+            ansList = fbAnswers[param]["Answers"]
+            if not unexpected:del ansList[-1]
+            ansList.insert(0,answerData)
+        #save
+        fb.jsonAnswers = json.dumps(fbAnswers)
+        fb.save()
     return HttpResponse('OK')
 
 #loads all appropriate ratings from older feedbacks

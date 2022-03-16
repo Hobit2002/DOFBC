@@ -149,6 +149,7 @@ h1 {
     color:rgb(212, 236, 192);
     font-weight:bold;
     display: flex;
+    overflow-x: auto;
 }
 
 .toplineWindowButton{
@@ -169,7 +170,7 @@ h1 {
     max-height: 80vh;
     overflow-y: auto;
     padding: 1em;
-    background-color: rgb(36, 59, 31);
+    background-color: rgb(156 199 148);
 }
 
 .centerImage{
@@ -201,6 +202,10 @@ h1 {
     margin-left: 25vw;
     margin-top: 28vh;
     text-align: center;
+}
+
+.moveLeft{
+    margin-left: -20vw;
 }
 
 /* classes for login/registration pages */
@@ -469,11 +474,11 @@ input[type=range] {
     margin-top: 5.5em;
   }
   
-  input[type=range]:focus{
+ input[type=range]:focus{
     border:none;
   }
 
-  input[type=range]::-webkit-slider-thumb {
+ input[type=range]::-webkit-slider-thumb {
     margin-top: -0.15em;
     width: 2.2em;
     height: 2.2em;
@@ -484,7 +489,7 @@ input[type=range] {
     -webkit-appearance: none;
   }
   
-  input[type=range]::-moz-range-thumb{
+ input[type=range]::-moz-range-thumb{
     width: 2.2em;
     height: 2.2em;
     background: #81ff7b;
@@ -493,7 +498,7 @@ input[type=range] {
     cursor: pointer;
   }
 
-  input[type=range]::-webkit-slider-runnable-track {
+ input[type=range]::-webkit-slider-runnable-track {
     height: 1.9em;
     cursor: pointer;
     box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
@@ -502,11 +507,11 @@ input[type=range] {
     border: 0.2px solid #010101;
   }
   
-  input[type=range]:focus::-webkit-slider-runnable-track {
+ input[type=range]:focus::-webkit-slider-runnable-track {
     background: #74aa62;
   }
   
-  input[type=range]::-moz-range-track {
+ input[type=range]::-moz-range-track {
     height: 1.9em;
     cursor: pointer;
     box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;

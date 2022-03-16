@@ -15,7 +15,6 @@ import json,random,string
 
 @csrf_exempt
 def checkAuth(request):
-    print(request.POST)
     password = request.POST["password"]
     username =request.POST["loginname"]
     user = djAuthenticate(password=password,username=username)

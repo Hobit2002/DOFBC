@@ -55,17 +55,21 @@ function submitQuestion(answer){
     }
     //if all questions were submitted, send them to server
     else{
-        activeRequest('submitFeedback',{"ID":fbResponse["fb"]["ID"],"Answers":JSON.stringify(fbData),"Unexpected":"1"},"POST")
+        var responseObj = {"ID":fbResponse["fb"]["ID"],"Answers":JSON.stringify(fbData),"Unexpected":"1"}
+        activeRequest('submitFeedback',responseObj,"POST")
         Questionblock.innerHTML = feedbackCompletedTemplate.innerHTML
         Questiontitle.hidden = true
         ProgressRow.hidden = true
         PreviousColumn.hidden = true
+        //if you don't have internet, show QR code with your response
+        if(navigator.connection.type==Connection.NONE){
+            new QRCode(offlineResponsesQRDiv,JSON.stringify(responseObj))
+        }
     }
 }
 
 //fill buttons
 function fillButtons(index){
     AltStar.innerHTML=String(index)+"/10"
-    fStars = index
-     
+    fStars = index    
 }

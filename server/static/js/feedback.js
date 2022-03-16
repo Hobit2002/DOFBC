@@ -1,9 +1,11 @@
 //initialize variables
-var maxProgress = 4
+var maxProgress = Object.keys(fbData).length-1
 var progress = -1
 let parameter
 let fStars
+maxProgBoxFillFeedback.innerHTML=maxProgress+1
 moveQuestion()
+
 
 //display question
 function drawQuestion(question){

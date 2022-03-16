@@ -127,7 +127,8 @@
                             <div id="feedbackName" class="h1 text-center"></div>
                             <div class="answerBlock">
                                 <div id="ProgressRow" class="progressRow">
-                                    <div id="currentProgress" class="d-inline"></div><div class="d-inline">/5</div>
+                                    <div id="currentProgress" class="d-inline"></div>
+                                    <div class="d-inline">/<div class="d-inline" id="maxProgBoxFillFeedback">5</div></div>
                                 </div>
                                 <div id="Questiontitle" class="questionTitle"></div>
                                 <div id="Questionblock"></div>
@@ -135,6 +136,7 @@
                                     <button id="PreviousQuestionButton" onclick="moveQuestion(-1)" class="nextButton float-left" hidden><=</button>
                                     <button id="SumbitQuestionButton" onclick="submitQuestion(NaN)" class="nextButton float-left">=></button>
                                 </div>
+                                <div id="offlineResponsesQRDiv" class="moveLeft"></div>
                             </div>
                         </div>
                     </div>
@@ -247,6 +249,12 @@
                                         <canvas id="FeedbackHistoryGraph" width="1000" height="500" aria-label="History of feedbacks" role="img"></canvas>
                                     </div>
                                 </div>
+                            </div>
+                            <div id="scanResponseFeedback" class="toplineWindow" hidden>
+                                <div class="toplineWindowButton dispNoneMobile" onclick="scanQRCode('feedbackAnswers')">
+                                    Naskenovat odpověď
+                                </div>
+                                <div id="toplineScriptproxyFeedback"></div>
                             </div>
                         </div>
                         <div id="questionsFeedback" class="twoFacedBlock rowListParentMobile">

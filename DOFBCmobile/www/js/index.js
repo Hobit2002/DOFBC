@@ -79,7 +79,7 @@ editBut.addEventListener('click',login,false);
 
 feedbackBut.addEventListener('click',fillFeedback,false)
 
-feedbackScanQRCode.addEventListener('click',scanQRCode,false)
+feedbackScanQRCode.addEventListener('click',function(){scanQRCode('feedbackUrl')},false)
 
 fillFeedbackButtonHome.addEventListener('click',function(){render('chooseFeedback')},false)
 
@@ -165,12 +165,19 @@ function drawFeedback(){
     }
     else{
         answerList.hidden = true
-    } 
+    }
+    //if offline and collecting feedbacks, enable QR scanning
+    console.log(fbData.Status)
+    if(navigator.connection.type==Connection.NONE && fbData.Status=="A"){
+        scanResponseFeedback.hidden = false
+    }
 }
 
 function drawFeedbackForm(){
     fbResponse = JSON.parse(response)
     fbData = fbResponse["questions"]
+    maxProgress = Object.keys(fbData).length-1
+    maxProgBoxFillFeedback.innerHTML=maxProgress+1
     feedbackName.innerHTML = JSON.parse("[\""+fbResponse["fb"]["name"]+"\"]")[0]
     render('fillFeedback')
     moveQuestion()
@@ -217,7 +224,7 @@ async function fillFeedback(){
         })
         response = JSON.stringify(selection)
     }
-    drawFeedbackForm()
+    //drawFeedbackForm()
 }
 
 async function home(){
@@ -284,7 +291,7 @@ function renderFBStatus(status){
     statusStateFeedback.innerHTML = statusHTML
 }
 
-function scanQRCode(){
+function scanQRCode(next="feedbackUrl"){
     try{
         cordova.plugins.barcodeScanner.scan(success,error,{
             showTorchButton: true,
@@ -294,8 +301,16 @@ function scanQRCode(){
         })
         function success(result){
             if(!result.cancelled){
-                feedbackAddress.value = result.text
-                fillFeedback()
+                switch(next){
+                    case 'feedbackUrl':
+                        feedbackAddress.value = result.text;
+                        fillFeedback();
+                        break;
+                    case 'feedbackAnswers':
+                        submitAnswers(result.text);
+                        break;
+                }
+                
             }
             else{
                 alert(JSDict["ScanError"])
@@ -309,6 +324,7 @@ function scanQRCode(){
         console.log(err)
     }
 }
+
 
 //support functions
 async function activeRequest(url,paramObject={},method="GET",addBase = true){
@@ -636,6 +652,32 @@ function prepareQuestions(fbId){
     return JSON.stringify({"questions":selection,"fb":{"name":fb.name,"ID":fb.id}})
 }
 
+function submitAnswers(answerString){
+    //load neccessary data
+    var fbKey = "feedback" + generateEncDataPairs({"ID":feedbackObjId.value},true)
+    var fb = JSON.parse(dataBackup[fbKey])
+    console.log(answerString)
+    var feedbackJSON = JSON.parse(answerString)["Answers"]
+    var sentAnswers = JSON.parse(feedbackJSON)
+    //insert obtained data to appropriate structures
+    var answeredQuestions = Object.keys(sentAnswers)
+    Array.from(["Rating","Verbal"]).forEach((qType)=>{
+        answers[qType].forEach((questionObj)=>{
+            question = questionObj["Name"]
+            answerList = questionObj["Answers"]
+            if(answeredQuestions.includes(question)){
+                if(sentAnswers[question]["Type"]==qType){
+                    answerList.push(sentAnswers[question]["Answers"])
+                }
+            }
+        })
+    })
+    drawAnswers()
+    //save data
+    fb.answerObj = answers
+    dataBackup[fbKey] = JSON.stringify(fb)
+    updateDataBackup()
+}
 
 //from webapp
 function edittextContent(object,site){
