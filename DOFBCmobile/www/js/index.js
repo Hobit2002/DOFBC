@@ -224,7 +224,7 @@ async function fillFeedback(){
         })
         response = JSON.stringify(selection)
     }
-    //drawFeedbackForm()
+    drawFeedbackForm()
 }
 
 async function home(){
