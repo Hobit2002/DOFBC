@@ -167,7 +167,6 @@ function drawFeedback(){
         answerList.hidden = true
     }
     //if offline and collecting feedbacks, enable QR scanning
-    console.log(fbData.Status)
     if(navigator.connection.type==Connection.NONE && fbData.Status=="A"){
         scanResponseFeedback.hidden = false
     }
@@ -656,7 +655,6 @@ function submitAnswers(answerString){
     //load neccessary data
     var fbKey = "feedback" + generateEncDataPairs({"ID":feedbackObjId.value},true)
     var fb = JSON.parse(dataBackup[fbKey])
-    console.log(answerString)
     var feedbackJSON = JSON.parse(answerString)["Answers"]
     var sentAnswers = JSON.parse(feedbackJSON)
     //insert obtained data to appropriate structures
